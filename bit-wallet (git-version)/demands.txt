@@ -1,0 +1,42 @@
+you  have crousel page, coinpage, coininfo page, cointable page now the task in i want to add a buy button in every crypto coin and whem we click on the buy buttton it redirect to a buy crypto page. 
+
+now i have new navbar and i want to give the routes to the buy , sell, swap, transferpage.
+
+Src folder-
+-	App.jsx
+-	CryptoContext.jsx
+-	
+1.	Assets Folder
+2.	Components Folder
+-  bannerfolder
+    *Banner.jsx
+    *Carousel.jsx
+    
+-  coinfolder
+    *coininfo.jsx
+    *cointable.jsx
+    *SelectButton.jsx
+-  navbarfolder
+-  header
+    *Header.jsx
+3.	Config Folder
+    *api.jsx
+    *data.jsx
+4.	Pages Folder
+5.	User-pannel Folder
+--Userpannel.jsx
+•	Balance Folder
+-	Mybalance.jsx
+•	History Folder
+-	Historyjsx
+•	Orders Folder
+-	Myorder.jsx
+•	Sel-component Folder
+-	Sellform.jsx
+•	User-pages Folder
+-	Buyform.jsx
+-	Swap.jsx
+-	Transfer.jsx
+-	
+
+

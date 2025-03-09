@@ -1,0 +1,267 @@
+@import "tailwindcss";
+
+.anny{
+    width: 21px;
+    height: 21px;
+    border-radius: 40px;
+
+    position: absolute;
+    top: 40%;
+    left: 20%;
+    background: rgba(248, 20, 20, 0.5); /* Semi-transparent Red */
+    animation: moveInCircle 4s linear infinite;
+}
+@keyframes moveInCircle {
+    0% {
+      transform: translate(0, 0);
+    }
+    25% {
+      transform: translate(100px, 0);
+    }
+    50% {
+      transform: translate(100px, 100px);
+    }
+    75% {
+      transform: translate(0, 100px);
+    }
+    100% {
+      transform: translate(0, 0);
+    }
+  }
+
+ .anny2{
+    width: 35px;
+    height: 35px;
+    background: red;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    animation: infinityMove 5s ease-in-out infinite;
+ }
+
+ @keyframes infinityMove {
+    0% {
+      transform: translate(50vw, 50vh) scaleX(1);
+    }
+    25% {
+      transform: translate(70vw, 30vh) scaleX(1);
+    }
+    50% {
+      transform: translate(50vw, 10vh) scaleX(1);
+    }
+    75% {
+      transform: translate(30vw, 30vh) scaleX(1);
+    }
+    100% {
+      transform: translate(50vw, 50vh) scaleX(1);
+    }
+  }
+  
+
+  .anny3{
+    width: 450px; /* Adjust width */
+  height: 300px; /* Adjust height */
+  background-color: lightblue; /* Background color */
+  border-radius:  70% 90% /  50% 60%; /* Creates the egg shape */
+  margin-top:10% ;
+  margin-left: 8%;
+  }
+ 
+ #snd {
+    position: absolute;
+    top: 95%;
+    font-size: 3rem;
+    opacity: 0;
+    transform: translateX(-100%);
+    text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.4); /* Add shadow to the text */
+    animation: slideIn 2s forwards;
+      }
+  
+      @keyframes slideIn {
+        0% {
+          opacity: 0;
+          transform: translateX(-100%);
+          text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.4);
+        }
+        100% {
+          opacity: 1;
+          transform: translateX(0);
+          text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.6); /* Stronger shadow at the end */
+        }
+      }
+
+.ours{
+  position: absolute;
+  top: 105%;
+  /* border: 2px solid red; */
+  width:100%;
+  height: 87%;
+}
+
+
+
+.gon {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+.block {
+  text-align: center;
+  
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  
+}
+.block:hover{
+  border: 1px solid rgb(173, 172, 172);
+  box-shadow: 10px 10px 10px rgb(173, 172, 172);
+}
+.block img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 20%;
+  margin-bottom: 15px;
+  margin-left: 40%;
+}
+.block h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+.block p {
+  color: #666;
+}
+
+
+#snd1 {
+  position: absolute;
+  top: 180%;
+  font-size: 3rem;
+  opacity: 0;
+  transform: translateX(-100%);
+  text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.4); /* Add shadow to the text */
+  animation: slideIn 2s forwards;
+    }
+
+    @keyframes slideIn {
+      0% {
+        opacity: 0;
+        transform: translateX(-100%);
+        text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.4);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+        text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.6); /* Stronger shadow at the end */
+      }
+    }
+
+
+    @media screen and (max-width: 1360px){
+
+        .Image-section img{
+          border: 2px solid black;
+          width: 20%;
+          height: 30%;
+          object-fit: cover;
+        }
+       #img1{
+        position: absolute;
+        right: 5%;
+       }
+       #img2{
+        position: absolute;
+        right: 15%;
+       }
+
+
+    }
+  
+
+    @media screen and (max-width: 1000px){
+      .Image-section img{
+
+        display: none;
+      }
+
+    }
+
+    
+    @media screen and (max-width: 660px){
+      .Image-section img{
+
+        display: none;
+      }
+
+
+    } 
+
+    @media screen and (max-width: 540px){
+      .Image-section img{
+
+        display: none;
+      }
+      .buttonn{
+        display: flex;
+      }
+
+      
+
+    } 
+    @media screen and (max-width: 530px){
+      .Image-section img{
+
+        display: none;
+      }
+      .buttonn{
+        display: flex;
+      }
+      .buttonn link{
+        font-size: 10px;
+      }
+
+      
+
+    } 
+
+    @media (max-width: 1420px) {
+      .gon {
+        margin-top: -32%;
+        padding: 20px;
+        grid-template-columns: repeat(2, 1fr); /* 2 items per row */
+      }
+      #img3{
+        display: none;
+      }
+      .ours{
+        position: absolute;
+      }
+      #snd{
+        position: absolute;
+        top: 61%;
+      }
+     
+    }
+    @media (max-width: 1270px){
+
+      .gon {
+        margin-top: -45%;
+        padding: 20px;
+        grid-template-columns: repeat(2, 1fr); /* 2 items per row */
+      }
+      #img3{
+        display: none;
+      }
+      .ours{
+        position: absolute;
+
+      }
+      #snd{
+        position: absolute;
+        top: 51%;
+      }
+
+    }

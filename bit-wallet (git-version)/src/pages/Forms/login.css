@@ -1,0 +1,49 @@
+.rotate {
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: moveAround 10s infinite alternate ease-in-out;
+  }
+  
+  @keyframes moveAround {
+    0% {
+      top: 10%;
+      left: 10%;
+    }
+    25% {
+      top: 20%;
+      left: 80%;
+    }
+    50% {
+      top: 70%;
+      left: 50%;
+    }
+    75% {
+      top: 30%;
+      left: 20%;
+    }
+    100% {
+      top: 80%;
+      left: 90%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .rotate {
+      width: 30px;
+      height: 30px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .rotate {
+      width: 20px;
+      height: 20px;
+    }
+  }
+  

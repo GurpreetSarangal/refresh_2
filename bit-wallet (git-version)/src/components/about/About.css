@@ -1,0 +1,161 @@
+@import "tailwindcss";
+
+
+
+.rotate {
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: moveAround 10s infinite alternate ease-in-out;
+  }
+  
+  @keyframes moveAround {
+    0% {
+      top: 10%;
+      left: 10%;
+    }
+    25% {
+      top: 20%;
+      left: 80%;
+    }
+    50% {
+      top: 70%;
+      left: 50%;
+    }
+    75% {
+      top: 30%;
+      left: 20%;
+    }
+    100% {
+      top: 80%;
+      left: 90%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .rotate {
+      width: 30px;
+      height: 30px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .rotate {
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+
+  .rotate2 {
+    width: 40px;
+    height: 40px;
+    background-color: skyblue;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: randomMove 6s infinite alternate ease-in-out;
+  }
+  
+  @keyframes randomMove {
+    0% {
+      top: 15%;
+      left: 15%;
+    }
+    20% {
+      top: 60%;
+      left: 30%;
+    }
+    40% {
+      top: 30%;
+      left: 70%;
+    }
+    60% {
+      top: 80%;
+      left: 50%;
+    }
+    80% {
+      top: 40%;
+      left: 20%;
+    }
+    100% {
+      top: 85%;
+      left: 85%;
+    }
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .rotate2 {
+      width: 30px;
+      height: 30px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .rotate2 {
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  .rotate4 {
+    width: 20px;
+    height: 20px;
+    background-color: pink;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: moveRandomly4 7s infinite alternate ease-in-out;
+  }
+  
+  @keyframes moveRandomly4 {
+    0% {
+      top: 10%;
+      left: 20%;
+    }
+    25% {
+      top: 60%;
+      left: 80%;
+    }
+    50% {
+      top: 40%;
+      left: 30%;
+    }
+    75% {
+      top: 80%;
+      left: 10%;
+    }
+    100% {
+      top: 20%;
+      left: 90%;
+    }
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .rotate4 {
+      width: 35px;
+      height: 35px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .rotate4 {
+      width: 25px;
+      height: 25px;
+    }
+  }
+  
+
+
+
