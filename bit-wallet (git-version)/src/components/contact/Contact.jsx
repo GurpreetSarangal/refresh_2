@@ -58,47 +58,43 @@ const Contact = () => {
             </div>
 
             {/* Contact Form */}
-            <div className="bg-light p-5 rounded h-170">
+            <div id="contact" className="bg-light p-5 rounded h-170">
               <h4 className="text-primary">Send Your Message</h4>
               <p className="mb-4">
-                The contact form is currently inactive. Get a functional and working contact form with Ajax & PHP in a few minutes.{" "}
-                <a className="text-primary fw-bold" href="https://htmlcodex.com/contact-form">
-                  Download Now
-                </a>.
+                We value your feedback and inquiries. Please fill out the form below to get in touch with us.
               </p>
               <form>
                 <div className="row g-4">
                   <div className="col-lg-12 col-xl-6">
                     <div className="form-floating">
-                      <input type="text" className="form-control border-0" id="name" placeholder="Your Name" />
+                      <input type="text" className="form-control border-0" id="name" placeholder="Your Name" required />
                       <label htmlFor="name">Your Name</label>
                     </div>
                   </div>
                   <div className="col-lg-12 col-xl-6">
                     <div className="form-floating">
-                      <input type="email" className="form-control border-0" id="email" placeholder="Your Email" />
+                      <input type="email" className="form-control border-0" id="email" placeholder="Your Email" required />
                       <label htmlFor="email">Your Email</label>
                     </div>
                   </div>
-                 
                   <div className="col-12">
                     <div className="form-floating">
-                      <input type="text" className="form-control border-0" id="subject" placeholder="Subject" />
+                      <input type="text" className="form-control border-0" id="subject" placeholder="Subject" required />
                       <label htmlFor="subject">Subject</label>
                     </div>
                   </div>
                   <div className="col-12">
                     <div className="form-floating">
-                      <textarea className="form-control border-0" placeholder="Leave a message here" id="message" style={{ height: "160px" }}></textarea>
+                      <textarea className="form-control border-0" placeholder="Leave a message here" id="message" style={{ height: "160px" }} required></textarea>
                       <label htmlFor="message">Message</label>
                     </div>
                   </div>
                   <div className="col-12">
-                    <button className="btn btn-primary w-100 py-3">Send Message</button>
+                    <button className="btn btn-primary w-100 py-3" type="submit">Send Message</button>
                   </div>
                 </div>
               </form>
-            </div>
+            </div>      
           </div>
 
           {/* Right Section - Google Map */}

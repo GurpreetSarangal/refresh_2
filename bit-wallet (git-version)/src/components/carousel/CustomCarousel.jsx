@@ -3,23 +3,38 @@ import { Carousel, Container, Button } from "react-bootstrap";
 import img1 from '../../assets/img/carousel-1.jpg';
 import img2 from '../../assets/img/carousel-2.jpg';
 import "./Carousel.css";
+import { Backdrop } from "@mui/material";
 
 
 const CustomCarousel = () => {
   return (
-    <Carousel fade interval={2000} pause={false}>
+    <Carousel slide interval={2000} pause={false}>
       {/* Slide 1 */}
-      <Carousel.Item>
+      <Carousel.Item sx={{
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        }}>
         <img src={img1} className="d-block w-100" alt="Slide 1" />
-        <Carousel.Caption>
-          <Container>
+        <Carousel.Caption style={{
+            position: 'absolute',
+            bottom: '0rem',
+            paddingTop: '10%',
+            paddingBottom: '1.25rem',
+            color: '#fff',
+            textAlign: 'center',
+            background: '#0000003b',
+            width: '100%',
+            height: '100%',
+            left: 0,
+          }} >
+        
+          <Container >
             <div className="text-center">
-              <h4 className="text-primary text-uppercase fw-bold mb-4">Welcome To Stocker</h4>
+              <h4 className="text-primary text-uppercase fw-bold mb-4">Welcome To CryptoExchange</h4>
               <h1 className="display-4 text-uppercase text-white mb-4">
-                Invest your money with higher return
+                Trade cryptocurrencies with confidence
               </h1>
               <p className="mb-5 fs-5">
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                Your gateway to the world of digital assets and blockchain technology.
               </p>
               <div className="d-flex justify-content-center mb-4">
                 <Button variant="light" className="rounded-pill py-3 px-4 me-2">
@@ -37,15 +52,26 @@ const CustomCarousel = () => {
       {/* Slide 2 */}
       <Carousel.Item>
         <img src={img2} className="d-block w-100" alt="Slide 2" />
-        <Carousel.Caption>
+        <Carousel.Caption style={{
+            position: 'absolute',
+            bottom: '0rem',
+            paddingTop: '10%',
+            paddingBottom: '1.25rem',
+            color: '#fff',
+            textAlign: 'center',
+            background: '#0000003b',
+            width: '100%',
+            height: '100%',
+            left: 0,
+          }}>
           <Container>
             <div className="text-center">
-              <h4 className="text-primary text-uppercase fw-bold mb-4">Welcome To Stocker</h4>
+              <h4 className="text-primary text-uppercase fw-bold mb-4">Welcome To CryptoExchange</h4>
               <h1 className="display-4 text-uppercase text-white mb-4">
-                Invest your money with higher return
+                Trade cryptocurrencies with confidence
               </h1>
               <p className="mb-5 fs-5">
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                Your gateway to the world of digital assets and blockchain technology.
               </p>
               <div className="d-flex justify-content-center mb-4">
                 <Button variant="light" className="rounded-pill py-3 px-4 me-2">

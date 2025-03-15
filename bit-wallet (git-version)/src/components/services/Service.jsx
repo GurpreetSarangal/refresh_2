@@ -8,24 +8,53 @@ import service5 from "../../assets/img/service-5.jpg";
 import service6 from "../../assets/img/service-6.jpg";
 
 const servicesData = [
-  { id: 1, img: service1, title: "Strategy Consulting" },
-  { id: 2, img: service2, title: "Financial Advisory" },
-  { id: 3, img: service3, title: "Managements" },
-  { id: 4, img: service4, title: "Supply Optimization" },
-  { id: 5, img: service5, title: "HR Consulting" },
-  { id: 6, img: service6, title: "Marketing Consulting" },
+  { 
+    id: 1, 
+    img: service1, 
+    title: "Crypto Trading Strategies", 
+    description: "Expert strategies to maximize your trading potential and minimize risks." 
+  },
+  { 
+    id: 2, 
+    img: service2, 
+    title: "Market Analysis", 
+    description: "In-depth analysis of market trends to help you make informed trading decisions." 
+  },
+  { 
+    id: 3, 
+    img: service3, 
+    title: "Portfolio Management", 
+    description: "Comprehensive management of your crypto assets to ensure optimal performance." 
+  },
+  { 
+    id: 4, 
+    img: service4, 
+    title: "Risk Management", 
+    description: "Strategies to identify and mitigate risks associated with cryptocurrency trading." 
+  },
+  { 
+    id: 5, 
+    img: service5, 
+    title: "Regulatory Compliance", 
+    description: "Guidance on navigating the complex regulatory landscape of cryptocurrency." 
+  },
+  { 
+    id: 6, 
+    img: service6, 
+    title: "Educational Resources", 
+    description: "Access to a wealth of resources to enhance your understanding of crypto trading." 
+  },
 ];
 
 const Services = () => {
   return (
-    <div className="container-fluid service pb-5">
+    <div className="container-fluid service pb-5" id="services">
       <div className="container pb-5">
         <div className="text-center mx-auto pb-5" style={{ maxWidth: "800px" }}>
           <h4 className="text-primary">Our Services</h4>
           <h1 className="display-5 mb-4">We Provide the Best Offers</h1>
           <p className="mb-0">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur
-            adipisci facilis cupiditate recusandae aperiam temporibus corporis.
+            At CryptoExchange, we are committed to providing top-notch services to help you succeed in the world of cryptocurrency.
           </p>
         </div>
         <div className="row g-4">
@@ -48,9 +77,7 @@ const Services = () => {
                     {service.title}
                   </a>
                   <p className="mb-4">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Tenetur, sint? Excepturi facilis neque nesciunt similique
-                    officiis veritatis.
+                    {service.description}
                   </p>
                   <a className="btn btn-primary rounded-pill py-2 px-4" href="#">
                     Learn More

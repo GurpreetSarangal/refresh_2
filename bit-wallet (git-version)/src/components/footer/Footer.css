@@ -3,7 +3,7 @@
 /* Footer Base Styles */
 .footer {
     margin-top: -13%;
-    border: 2px solid rgb(179, 222, 239);
+    /* bg G;UIorder: 2px solid rgb(179, 222, 239); */
     background-color: #111;
     color: white;
     padding: 40px 20px;

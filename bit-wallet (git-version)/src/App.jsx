@@ -44,7 +44,7 @@ const MainLayout = () => {
       {/* Hide Navbar on specified routes */}
       {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
       
-      <div style={{ padding: "20px" }}> {/* Ensures content is visible */}
+      <div style={{  padding: "0" }}> {/* Ensures content is visible */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/crypto" element={<Crypto />} />

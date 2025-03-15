@@ -71,8 +71,8 @@ const Carousel = () => {
         <img
           src={coin?.image}
           alt={coin.name}
-          height="80"
-          style={{ marginBottom: 10 }}
+          
+          style={{ marginBottom: 10, width: 50, height: 50 }}
         />
         <span>
           {coin?.symbol}
@@ -108,9 +108,9 @@ const Carousel = () => {
       <AliceCarousel
         mouseTracking
         infinite
-        autoPlayInterval={1000}
-        animationDuration={1500}
-        disableDotsControls
+        autoPlayInterval={500}
+        animationDuration={1000}
+        // disableDotsControls
         disableButtonsControls
         responsive={responsive}
         items={items}

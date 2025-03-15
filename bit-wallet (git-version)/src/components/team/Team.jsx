@@ -5,21 +5,20 @@ import team2 from "../../assets/img/team-2.jpg";
 import team3 from "../../assets/img/team-3.jpg";
 
 const teamMembers = [
-  { id: 1, name: "David James", profession: "Profession", img: team1 },
-  { id: 2, name: "David James", profession: "Profession", img: team2 },
-  { id: 3, name: "David James", profession: "Profession", img: team3 },
+  { id: 1, name: "Alice Johnson", profession: "CEO & Founder", img: team1 },
+  { id: 2, name: "Michael Smith", profession: "Chief Technology Officer", img: team2 },
+  { id: 3, name: "Sophia Brown", profession: "Head of Marketing", img: team3 },
 ];
 
 const Team = () => {
   return (
-    <div className="container-fluid team pb-5">
+    <div className="container-fluid team pb-5" id="team">
       <div className="container pb-5">
         <div className="text-center mx-auto pb-5" style={{ maxWidth: "800px" }}>
           <h4 className="text-primary">Our Team</h4>
           <h1 className="display-5 mb-4">Meet Our Advisers</h1>
           <p className="mb-0">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur
-            adipisci facilis cupiditate recusandae aperiam temporibus corporis.
+            At CryptoExchange, our team of experts is dedicated to providing you with the best trading experience.
           </p>
         </div>
         <div className="row g-4">

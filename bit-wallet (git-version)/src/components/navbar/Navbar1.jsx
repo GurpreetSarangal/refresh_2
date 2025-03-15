@@ -14,17 +14,17 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 function NavList() {
   return (
     <List className="mb-6 mt-2 p-0 lg:mb-0 lg:mt-0 lg:flex-row lg:p-1 text-black">
-      <Typography as="div" variant="small" className="font-medium">
+      <Typography as="div" variant="body2" className="font-medium">
         <Link to="/" className="flex items-center gap-2 py-2 pr-4">
           <ListItem>Home</ListItem>
         </Link>
       </Typography>
-      <Typography as="div" variant="small" className="font-medium">
+      <Typography as="div" variant="body2" className="font-medium">
         <Link to="/crypto" className="flex items-center gap-2 py-2 pr-4">
           <ListItem>Live Crypto</ListItem>
         </Link>
       </Typography>
-      <Typography as="div" variant="small" className="font-medium">
+      <Typography as="div" variant="body2" className="font-medium">
         <Link to="/support" className="flex items-center gap-2 py-2 pr-4">
           <ListItem>Contact Us</ListItem>
         </Link>
@@ -43,7 +43,7 @@ export function Navigationbar() {
   }, []);
 
   return (
-    <Navbar className="w-full px-6 py-3 bg-light backdrop-blur-md">
+    <Navbar className="w-full px-6 py-3 bg-light backdrop-blur-md" id="navbar">
       <div className="flex items-center justify-between text-black">
         {/* Website Name with Icon */}
         <Typography as="div" variant="h6" className="mr-4 cursor-pointer py-1.5 lg:ml-2 flex items-center gap-2">
@@ -61,7 +61,10 @@ export function Navigationbar() {
           <Link to="/get-started">
             <Button
               size="sm"
-              className="bg-gradient-to-r from-[#00d084] to-orange-200 text-white font-semibold px-5 py-2 rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+              className=" text-white font-semibold  rounded px-5 py-2 hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+              style={{
+                backgroundImage: "linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12)",
+              }}
             >
               Get Started
             </Button>
