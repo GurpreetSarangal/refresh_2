@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 const Topbar = () => {
   return (
     <>
-      <div className="container-fluid topbar bg-light px-5 d-none d-lg-block">
-        <div className="row gx-0 align-items-center">
+      <div className="container-fluid topbar bg-light px-5 d-block d-lg-block">
+        <div className="row gx-0 align-items-center justify-between">
           {/* Left Section */}
-          <div className="col-lg-8 text-center text-lg-start mb-2 mb-lg-0">
+          <div className="col-md-8 text-center text-lg-start mb-2 d-none d-md-block">
             <div className="d-flex flex-wrap">
               <Link to="/location" className="text-muted small me-4">
                 <i className="fas fa-map-marker-alt text-primary me-2"></i>Find A Location
@@ -22,7 +22,7 @@ const Topbar = () => {
           </div>
 
           {/* Right Section */}
-          <div className="col-lg-4 text-center text-lg-end">
+          <div className="col-lg-4 col-md-3  text-center text-lg-end">
             <div className="d-inline-flex align-items-center" style={{ height: "45px" }}>
               <Link to="/signup">
                 <small className="me-3 text-dark">

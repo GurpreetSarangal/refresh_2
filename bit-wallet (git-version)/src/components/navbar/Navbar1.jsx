@@ -13,19 +13,19 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 function NavList() {
   return (
-    <List className="mb-6 mt-2 p-0 lg:mb-0 lg:mt-0 lg:flex-row lg:p-1 text-black">
+    <List className=" p-0 lg:flex-row lg:p-1 text-black">
       <Typography as="div" variant="body2" className="font-medium">
-        <Link to="/" className="flex items-center gap-2 py-2 pr-4">
+        <Link to="/" className="flex items-center gap-2 py-1 pr-4">
           <ListItem>Home</ListItem>
         </Link>
       </Typography>
       <Typography as="div" variant="body2" className="font-medium">
-        <Link to="/crypto" className="flex items-center gap-2 py-2 pr-4">
+        <Link to="/crypto" className="flex items-center gap-2 py-1 pr-4">
           <ListItem>Live Crypto</ListItem>
         </Link>
       </Typography>
       <Typography as="div" variant="body2" className="font-medium">
-        <Link to="/support" className="flex items-center gap-2 py-2 pr-4">
+        <Link to="/support" className="flex items-center gap-2 py-1 pr-4">
           <ListItem>Contact Us</ListItem>
         </Link>
       </Typography>
@@ -43,10 +43,10 @@ export function Navigationbar() {
   }, []);
 
   return (
-    <Navbar className="w-full px-6 py-3 bg-light backdrop-blur-md" id="navbar">
+    <Navbar className="w-full px-4 py-0 bg-light backdrop-blur-md" id="navbar">
       <div className="flex items-center justify-between text-black">
         {/* Website Name with Icon */}
-        <Typography as="div" variant="h6" className="mr-4 cursor-pointer py-1.5 lg:ml-2 flex items-center gap-2">
+        <Typography as="div" variant="h6" className="mr-4 cursor-pointer  lg:ml-2 flex items-center gap-2">
           <i className="fas fa-search-dollar text-[#00d084] text-4xl"></i>
           Crypto Site
         </Typography>
