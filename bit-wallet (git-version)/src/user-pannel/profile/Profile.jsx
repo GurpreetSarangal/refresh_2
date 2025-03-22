@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate, Link } from "react-router-dom";
 import { 
   Wallet, 
   LineChart, 
+  CirclePower,
   Settings, 
   Bell, 
   ArrowUpRight, 
@@ -21,6 +23,10 @@ import {
   PlusCircle,
   MinusCircle
 } from 'lucide-react';
+import BuyCryptoForm from '../user-pages/Buyform';
+import SellCryptoForm from '../sell-component/Sellform';
+import Swap from '../../pages/swapcoin/Swapcomp';
+import SendCoin from '../funds/Sendcoin';
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -33,11 +39,13 @@ function App() {
     phone: '+1 (555) 123-4567',
     imageUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80'
   });
+  const navigate = useNavigate();
 
   const dashboardItems = [
     { id: 'dashboard', icon: LineChart, label: 'Overview' },
     { id: 'add-funds', icon: PlusCircle, label: 'Add Funds' },
     { id: 'withdraw', icon: MinusCircle, label: 'Withdraw Amount' },
+    { id: 'logout', icon: CirclePower, label: 'Logout' },
   ];
 
   const navItems = [
@@ -50,6 +58,38 @@ function App() {
     { id: 'transfer', icon: SendHorizontal, label: 'Transfer Crypto' },
     { id: 'settings', icon: Settings, label: 'Settings' },
   ];
+
+  const URL = "http://localhost:5000/api/auth/login";
+
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(profileData),
+      });
+
+      const responseData = await response.json();
+      console.log("after logout: ", responseData);
+
+      if (response.ok) {
+        // Save token in localStorage
+        localStorage.setItem("token", responseData.token);
+
+        // Navigate to home page after login
+        setTimeout(() => navigate(""), 500);
+      } else {
+        alert(responseData.message || "Logout failed. Please try again.");
+      }
+    } catch (error) {
+      console.log("Logout Error:", error);
+      alert("Something went wrong. Please check your network and try again.");
+    }
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -209,6 +249,84 @@ function App() {
             </div>
           </div>
         );
+      
+      case 'buy':
+        return (<> <BuyCryptoForm /> </>)
+      
+      case 'sell':
+        return (<> <SellCryptoForm /> </>);
+      
+      case 'swap':
+        return (<> <Swap /> </>);
+      
+      case 'transfer':
+        return (<><SendCoin /> </>);
+      
+      case 'logout':
+        return (<> 
+        
+        <div className="flex items-center justify-center ">
+      <div className="bg-white rounded-xl p-6 w-full max-w-md">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold">Logout</h2>
+          <button 
+            onClick={() => setActiveTab('dashboard')}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        <div className="space-y-6">
+          
+          <form onSubmit={handleLogout} method="post">
+
+              {/* Form Fields */}
+              <div className="space-y-4">
+                <div>
+                <h5 className="text-2xl font-bold">Do you really want to logout?</h5>
+                </div>
+                
+                <div>
+                  
+                  <input
+                    type="email"
+                    hidden
+                    value={profileData.email}
+                    onChange={(e) => setProfileData({...profileData, email: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  
+                  <input
+                    type="tel"
+                    hidden
+                    value={profileData.phone}
+                    onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+              </div>
+
+              {/* Save Button */}
+              <button 
+                // onClick={() => setIsProfileOpen(false)}
+                type="submit"
+                className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Confirm Logout  
+              </button>
+          </form>
+        </div>
+      </div>
+    </div>
+        
+         </>);
+      
+      case 'settings':
+        return (<></>);
 
       default:
         return (
