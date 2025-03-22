@@ -56,7 +56,7 @@ export const Signup = () => {
   };
 
   return (
-    <section className="flex justify-center items-center min-h-screen ">
+    <section className="flex justify-center items-center mt-20">
       <main className="w-full max-w-md p-6 bg-white shadow-lg rounded-lg">
         <h1 className="text-2xl font-bold text-gray-700 text-center mb-6">Registration Form</h1>
         <form onSubmit={handleSubmit} className="space-y-4">

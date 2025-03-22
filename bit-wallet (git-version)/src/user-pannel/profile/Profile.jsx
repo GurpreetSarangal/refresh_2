@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from "react-router-dom";
+
 import { 
   Wallet, 
   LineChart, 
@@ -40,6 +41,18 @@ function App() {
     imageUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80'
   });
   const navigate = useNavigate();
+  const [photos, setPhotos] = useState([]);
+  useEffect(() => {
+    fetch('http://localhost:5000/api/wallet/info')
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setProfileData(data);
+      });
+  }, []);
+  
 
   const dashboardItems = [
     { id: 'dashboard', icon: LineChart, label: 'Overview' },

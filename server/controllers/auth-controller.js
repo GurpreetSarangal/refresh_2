@@ -66,8 +66,6 @@ const login = async (req, res) => {
     
     if (!userExist) {
      return res.status(400).json({message:"invalid Credentials"})
-
-      
     }
 
 
