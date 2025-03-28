@@ -67,7 +67,7 @@ export default function CoinsTable() {
   return (
     <ThemeProvider theme={darkTheme}>
       <Container sx={{ textAlign: "center", marginTop: 4 }}>
-        <Typography variant="h4" sx={{ marginBottom: 3, fontFamily: "Montserrat" }}>
+        <Typography variant="h4" sx={{ marginBottom: 3, fontFamily: "Montserrat", }}>
           Cryptocurrency Prices by Market Cap
         </Typography>
 
@@ -117,7 +117,7 @@ export default function CoinsTable() {
                     <TableCell
                       key={head}
                       align={head === "Coin" ? "left" : "right"}
-                      sx={{ color: "black", fontWeight: "700", fontFamily: "Montserrat" }}
+                      sx={{ color: "black", fontWeight: "700", fontSize: 18 }}
                     >
                       {head}
                     </TableCell>
@@ -135,14 +135,14 @@ export default function CoinsTable() {
                         key={row.name}
                         onClick={() => navigate(`/coins/${row.id}`)}
                         sx={{
-                          backgroundColor: "#16171a",
+                          backgroundColor: "#111",
                           cursor: "pointer",
-                          "&:hover": { backgroundColor: "#131111" },
+                          "&:hover": { backgroundColor: "#222" },
                         }}
                       >
-                        <TableCell component="th" scope="row" sx={{ display: "flex", gap: 2 }}>
-                          <img src={row.image} alt={row.name} height="30px" style={{ marginBottom: 10 }} />
-                          <Box>
+                        <TableCell component="td" scope="row" sx={{ display: "flex", gap: 2 }}>
+                          <img src={row.image} alt={row.name} style={{  height: 95  }} />
+                          <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
                             <Typography variant="body1" sx={{ textTransform: "uppercase", fontSize: 18 }}>
                               {row.symbol}
                             </Typography>
@@ -151,15 +151,15 @@ export default function CoinsTable() {
                             </Typography>
                           </Box>
                         </TableCell>
-                        <TableCell align="right">{symbol} {numberWithCommas(row.current_price.toFixed(2))}</TableCell>
+                        <TableCell align="right" sx={{ textTransform: "uppercase", fontSize: 18 }} >{symbol} {numberWithCommas(row.current_price.toFixed(2))}</TableCell>
                         <TableCell
                           align="right"
-                          sx={{ color: profit ? "rgb(14, 203, 129)" : "red", fontWeight: 500 }}
+                          sx={{ color: profit ? "rgb(14, 203, 129)" : "red", fontWeight: 500, fontSize: 18 }}
                         >
                           {profit && "+"}
                           {row.price_change_percentage_24h.toFixed(2)}%
                         </TableCell>
-                        <TableCell align="right">
+                        <TableCell align="right" sx={{ textTransform: "uppercase", fontSize: 18 }} >
                           {symbol} {numberWithCommas(row.market_cap.toString().slice(0, -6))}M
                         </TableCell>
                       </TableRow>
@@ -182,8 +182,13 @@ export default function CoinsTable() {
         backgroundColor: "black", // Black background for selected page
         color: "white", // White text for contrast
       },
+      "& .MuiPaginationItem-page.Mui-selected:hover": {
+        backgroundColor: "#111", // Black background for selected page
+        color: "white", // White text for contrast
+      },
       "& .MuiPaginationItem-page:hover": {
         backgroundColor: "rgba(0, 0, 0, 0.1)", // Light black hover effect
+
       },
     }}
     onChange={(_, value) => {

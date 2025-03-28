@@ -8,7 +8,7 @@ import Login from "./pages/Forms/Login";
 import Signup from "./pages/Forms/Signup";
 import CoinPage from "./pages/CoinPage";
 import UserPanel from "./user-pannel/Userpannel";
-import Buy from "./user-pannel/user-pages/Buy";
+import BuyCryptoForm from "./user-pannel/user-pages/Buyform";
 import Sell from "./user-pannel/user-pages/Sell";
 import Swap from "./user-pannel/user-pages/Swap";
 import Transfer from "./user-pannel/user-pages/Transfer";
@@ -44,7 +44,7 @@ const MainLayout = () => {
       {/* Hide Navbar on specified routes */}
       {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
       
-      <div style={{ padding: "20px" }}> {/* Ensures content is visible */}
+      <div style={{  padding: "0" }}> {/* Ensures content is visible */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/crypto" element={<Crypto />} />
@@ -53,7 +53,7 @@ const MainLayout = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/coins/:id" element={<CoinPage />} />
           <Route path="/user-pannel" element={<UserPanel />} />
-          <Route path="/buy" element={<Buy />} />
+          <Route path="/buy" element={<BuyCryptoForm />} />
           <Route path="/sell" element={<Sell />} />
           <Route path="/swap" element={<Swap />} />
           <Route path="/transfer" element={<Transfer />} />

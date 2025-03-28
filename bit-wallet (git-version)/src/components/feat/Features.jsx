@@ -2,15 +2,35 @@ import React from "react";
 import "./Features.css"; // Create a separate CSS file for styling
 
 const featuresData = [
-  { id: 1, icon: "fas fa-chart-line", title: "Global Management" },
-  { id: 2, icon: "fas fa-university", title: "Corporate Banking" },
-  { id: 3, icon: "fas fa-file-alt", title: "Asset Management" },
-  { id: 4, icon: "fas fa-hand-holding-usd", title: "Investment Bank" },
+  { 
+    id: 1, 
+    icon: "fas fa-chart-line", 
+    title: "Real-Time Market Data", 
+    description: "Access to live market data and analytics to make informed trading decisions." 
+  },
+  { 
+    id: 2, 
+    icon: "fas fa-university", 
+    title: "Secure Transactions", 
+    description: "Robust security measures to ensure safe and secure transactions for all users." 
+  },
+  { 
+    id: 3, 
+    icon: "fas fa-file-alt", 
+    title: "User -Friendly Interface", 
+    description: "An intuitive platform designed for both beginners and experienced traders." 
+  },
+  { 
+    id: 4, 
+    icon: "fas fa-hand-holding-usd", 
+    title: "24/7 Customer Support", 
+    description: "Dedicated support team available around the clock to assist you with any inquiries." 
+  },
 ];
 
 const Features = () => {
   return (
-    <div className="container-fluid feature pb-5">
+    <div className="container-fluid feature pb-5" id="features">
       <div className="container pb-5">
         <div className="text-center mx-auto pb-5" style={{ maxWidth: "800px" }}>
           <h4 className="text-primary">Our Features</h4>
@@ -18,8 +38,7 @@ const Features = () => {
             Connecting businesses, ideas, and people for greater impact.
           </h1>
           <p className="mb-0">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur
-            adipisci facilis cupiditate recusandae aperiam temporibus corporis.
+            At CryptoExchange, we offer a range of features designed to enhance your trading experience.
           </p>
         </div>
         <div className="row g-4">
@@ -35,7 +54,7 @@ const Features = () => {
                 </div>
                 <h4>{feature.title}</h4>
                 <p className="mb-4">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea hic laborum odit pariatur...
+                  {feature.description}
                 </p>
                 <a className="btn btn-primary rounded-pill py-2 px-4" href="#">
                   Learn More

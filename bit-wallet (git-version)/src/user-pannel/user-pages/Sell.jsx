@@ -1,6 +1,6 @@
 import React from 'react'
 import UserPanel from '../Userpannel'
-import Sellform from '../sel-component/Sellfrom'
+import Sellform from '../sell-component/Sellform'
 
 
 const Sell = () => {

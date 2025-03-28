@@ -11,7 +11,7 @@ const Header = () => {
     <AppBar position="static" sx={{ backgroundColor: "transparent", marginTop:"20px", boxShadow: "none" }}>
       <Container>
         <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1, color: "Black" }}
+          <Typography variant="h6" sx={{ flexGrow: 1, color: "#444" }}
            >
             Live Crypto Chart
           </Typography>

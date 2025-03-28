@@ -37,10 +37,12 @@ mongoose.connect(process.env.MONGODB_URI, {
 // Import Routes
 const authRouter = require("./routes/auth-route");
 const contactRouter = require("./routes/contact-router");
+const walletRouter = require("./routes/wallet-router");
 
 // Mount Routes
 app.use("/api/auth", authRouter);
 app.use("/api/form", contactRouter); // Assuming /contact route is defined inside contact-router
+app.use("/api/wallet", walletRouter); // Assuming /contact route is defined inside contact-router
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

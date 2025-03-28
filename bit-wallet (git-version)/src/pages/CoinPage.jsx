@@ -42,7 +42,7 @@ const CoinPage = () => {
         alignItems="center"
         borderRight={{ md: "2px solid grey" }}
         p={2}
-        sx={{ color: "white" }} // Make text white in the sidebar
+        sx={{ color: "#FFF !important" }} // Make text white in the sidebar
       >
         <img
           src={coin?.image.large}
@@ -50,16 +50,19 @@ const CoinPage = () => {
           height="200"
           style={{ marginBottom: 20 }}
         />
-        <Typography variant="h3" fontWeight="bold" mb={2} fontFamily="Montserrat">
+        <Typography variant="span" fontWeight="bold" mb={2} fontFamily="Montserrat" sx={{
+          fontSize: 40
+        }} >
           {coin?.name}
         </Typography>
         <Typography
-          variant="subtitle1"
+          variant="span"
           sx={{
             width: "100%",
             fontFamily: "Montserrat",
             textAlign: "justify",
             paddingBottom: 2,
+            fontSize: 20
           }}
           dangerouslySetInnerHTML={{ __html: coin?.description?.en?.split(". ")[0] }}
         />
