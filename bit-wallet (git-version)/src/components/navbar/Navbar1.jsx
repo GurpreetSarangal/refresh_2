@@ -48,7 +48,7 @@ export function Navigationbar() {
         {/* Website Name with Icon */}
         <Typography as="div" variant="h6" className="mr-4 cursor-pointer  lg:ml-2 flex items-center gap-2">
           <i className="fas fa-search-dollar text-[#00d084] text-4xl"></i>
-          Crypto Site
+          DracoShield
         </Typography>
 
         {/* Navigation Links */}
