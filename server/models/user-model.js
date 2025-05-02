@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true, 
+    unique: true,
   },
   password: {
     type: String,
@@ -20,6 +20,15 @@ const userSchema = new mongoose.Schema({
   isAdmin: {
     type: Boolean,
     default: false,
+  },
+  walletAddress: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+  walletPrivateKey: {
+    type: String,
+    select: false,
   },
 });
 
@@ -38,7 +47,7 @@ userSchema.pre("save", async function (next) {
 });
 
 //compare the password
-userSchema.methods.comparePassword = async function(password){
+userSchema.methods.comparePassword = async function (password) {
   return bcrypt.compare(password, this.password);
 
 };
@@ -47,11 +56,15 @@ userSchema.methods.comparePassword = async function(password){
 
 // 🔹 Generate JWT Token
 userSchema.methods.generateToken = function () {
-  return jwt.sign(
-    { userId: this._id.toString(), email: this.email, isAdmin: this.isAdmin },
-    process.env.JWT_SECRET_KEY || "default_secret",
-    { expiresIn: "30d" }
-  );
+  try {
+    return jwt.sign(
+      { userId: this._id.toString(), email: this.email, isAdmin: this.isAdmin },
+      process.env.JWT_SECRET_KEY || "default_secret",
+      { expiresIn: "30d" }
+    );
+  } catch (error) {
+    console.error("Error generating token", error);
+  }
 };
 
 // 🔹 Define and export the model

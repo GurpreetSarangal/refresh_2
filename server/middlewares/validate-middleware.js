@@ -1,6 +1,7 @@
 
 const validate = (schema) => async (req,res,next) =>{
     try {
+        console.log(req.body)
         const parseBody = await schema.parseAsync(req.body);
         req.body = parseBody;
         next();
@@ -16,7 +17,7 @@ const validate = (schema) => async (req,res,next) =>{
         };
 
 
-        console.log(message);
+        console.log(error);
         // res.status(400).json ({ msg: message });
         next(error);
     }

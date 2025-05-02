@@ -43,13 +43,20 @@ function App() {
   const navigate = useNavigate();
   const [photos, setPhotos] = useState([]);
   useEffect(() => {
-    fetch('http://localhost:5000/api/wallet/info')
-      .then((res) => {
-        return res.json();
-      })
+    const token = localStorage.getItem("token");
+  
+    fetch('http://localhost:5000/api/wallet/profile', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then((res) => res.json())
       .then((data) => {
         console.log(data);
         setProfileData(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching profile:", error);
       });
   }, []);
   
