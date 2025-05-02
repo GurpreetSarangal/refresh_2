@@ -1,33 +1,38 @@
 const User = require("../models/user-model");
 const bcrypt = require("bcrypt");
 
+// const User = require("../models/user-model");
+
 // Controller to get user info by userId
 const infoProvider = async (req, res) => {
-    const userId = req.params.userId;
-
+    
+    // Now you have access to `req.user.userId`
+    
     try {
-        // Fetch user from the database
-        // const user = await User.findById(userId);
+        const userId = req.user.userId; // 🔥 CORRECTLY accessing params
+        console.log("User ID received:", userId); // Now you should see the userId properly
+        
+        // Fetch user from the database (uncomment and use when needed)
+        const user = await User.findById(userId);
+        
+        if (!user) {
+            return res.status(404).json({ detail: 'User not found' });
+        }else{
+            console.log(user)
+            // res.status(200).json({ 
+            //     userId: req.user.userId, 
+            //     message: "Protected profile data" 
+            // });
+            
+        }
 
-        // if (!user) {
-        //     return res.status(404).json({ detail: 'User  not found' });
-        // }
-
-        // Return user details
-        // res.json({
-        //     id: user._id,
-        //     name: user.name,
-        //     balance: user.balance,
-        //     // Add any other user fields you want to return
-        // });
-            const response = req.body;
-            console.log(response)
-            res.status(200).json({ 
-                name: 'aksdfjDoe',
-                email: 'john.doe@example.com',
-                phone: '+1 (555) 123-4567',
-                imageUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80'
-            });
+        // Example static response
+        res.status(200).json({ 
+            name: 'John Doesdfsdfa',
+            email: 'john.doe@example.com',
+            phone: '+1 (555) 123-4567',
+            imageUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80'
+        });
     } catch (error) {
         console.error("Error fetching user info:", error);
         res.status(500).json({ detail: 'Internal Server Error' });
@@ -35,6 +40,45 @@ const infoProvider = async (req, res) => {
 };
 
 module.exports = infoProvider;
+
+
+// -------------------------------------
+// // Controller to get user info by userId
+// const infoProvider = async (req, res) => {
+//     const userId = req.params.user;
+
+//     try {
+//         // Fetch user from the database
+//         // const user = await User.findById(userId);
+
+//         // if (!user) {
+//         //     return res.status(404).json({ detail: 'User  not found' });
+//         // }
+
+//         // Return user details
+//         // res.json({
+//         //     id: user._id,
+//         //     name: user.name,
+//         //     balance: user.balance,
+//         //     // Add any other user fields you want to return
+//         // });
+//             const request = req.body.userId;
+//             console.log(userId)
+//             res.status(200).json({ 
+//                 name: 'aksdfjDoe',
+//                 email: 'john.doe@example.com',
+//                 phone: '+1 (555) 123-4567',
+//                 imageUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80'
+//             });
+//     } catch (error) {
+//         console.error("Error fetching user info:", error);
+//         res.status(500).json({ detail: 'Internal Server Error' });
+//     }
+// };
+
+// module.exports = infoProvider;
+
+// ----------------------
 // const infoProvider = async (req, res) => {
 //   try {
 //     const response = req.body;
