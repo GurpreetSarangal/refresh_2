@@ -1,5 +1,6 @@
 const User = require("../models/user-model");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 const { ethers } = require("ethers");
 
 const home = async (req, res) => {
@@ -57,7 +58,7 @@ const home = async (req, res) => {
 
 const register = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, phone_number } = req.body;
 
     if (!username || !email || !password) {
       return res.status(400).json({ msg: "All fields are required" });
@@ -68,17 +69,30 @@ const register = async (req, res) => {
       return res.status(400).json({ msg: "Email already exists" });
     }
 
-    // 🔐 Generate Sepolia Wallet (random mnemonic, securely)
+    // 🔐 Create new Ethereum wallet
     const wallet = ethers.Wallet.createRandom();
     const walletAddress = wallet.address;
-    const walletPrivateKey = wallet.privateKey; // 🔥 DO NOT expose this in API response
+    const walletPrivateKey = wallet.privateKey;
 
+    // 🔐 Encrypt private key using user's password
+    // const cipher = crypto.createCipher("aes-256-cbc", password);
+    // let encryptedPrivateKey = cipher.update(walletPrivateKey, "utf8", "hex");
+    // encryptedPrivateKey += cipher.final("hex");
+
+    const { encryptedPrivateKey, iv } = encryptPrivateKey(walletPrivateKey, password);
+
+    // 🛠 Create new user with wallet account
     const newUser = new User({
       username,
       email,
       password,
-      walletAddress,
-      walletPrivateKey, // NOTE: optionally encrypt before saving
+      phone_number,
+      accounts: [
+        {
+          wallet_address: walletAddress,
+          private_key: encryptedPrivateKey + ":" + iv,
+        },
+      ],
     });
 
     await newUser.save();
@@ -88,7 +102,6 @@ const register = async (req, res) => {
       token: await newUser.generateToken(),
       userId: newUser._id.toString(),
     });
-
   } catch (error) {
     console.error("❌ Error in Register:", error);
     res.status(500).json({ message: "Internal server error", error: error.message });
@@ -132,6 +145,23 @@ const login = async (req, res) => {
   }
 }
 
+
+
+const ENCRYPTION_ALGORITHM = "aes-256-cbc";
+
+function encryptPrivateKey(privateKey, password) {
+  const key = crypto.scryptSync(password, "salt", 32); // derive key
+  const iv = crypto.randomBytes(16); // initialization vector
+  const cipher = crypto.createCipheriv(ENCRYPTION_ALGORITHM, key, iv);
+
+  let encrypted = cipher.update(privateKey, "utf8", "hex");
+  encrypted += cipher.final("hex");
+
+  return {
+    encryptedPrivateKey: encrypted,
+    iv: iv.toString("hex"),
+  };
+}
 
 // ✅ Export both functions
 module.exports = { home, register,login };
