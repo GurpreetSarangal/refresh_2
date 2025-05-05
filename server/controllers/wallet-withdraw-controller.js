@@ -6,7 +6,7 @@ const withdrawFiatBalance = async (req, res) => {
     const { withdrawAmount, bankDetails } = req.body;
     let wa = Number(withdrawAmount)
     // ✅ Basic validations
-    if (typeof wa !== "number" || wa <= 0) {
+    if (typeof withdrawAmount !== "number" || withdrawAmount <= 0) {
       return res.status(400).json({ msg: "Withdrawal amount must be a positive number." });
     }
 
@@ -20,19 +20,19 @@ const withdrawFiatBalance = async (req, res) => {
       return res.status(404).json({ msg: "User not found." });
     }
 
-    if (user.fiat_balance < wa) {
+    if (user.fiat_balance < withdrawAmount) {
       return res.status(400).json({ msg: "Insufficient balance." });
     }
 
     // 💸 Deduct balance
-    user.fiat_balance -= wa;
+    user.fiat_balance -= withdrawAmount;
     await user.save();
 
     // 🏦 Simulate bank transfer (in real case, integrate with a payment gateway or banking API)
     const mockTransaction = {
       toBank: bankDetails.bankName,
       accountNumber: bankDetails.accountNumber,
-      amount: wa,
+      amount: withdrawAmount,
       status: "processed", // mock status
       transactionId: "TXN" + Date.now()
     };
