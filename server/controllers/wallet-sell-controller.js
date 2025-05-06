@@ -1,31 +1,38 @@
-const ethers = require("ethers"); // FIX: do not destructure
+const ethers = require("ethers");
 const crypto = require("crypto");
 const axios = require("axios");
 const User = require("../models/user-model");
 
 const fetchExchangeRateWithRetry = async (maxRetries = 3, delay = 1000) => {
-  let attempts = 0;
-  while (attempts < maxRetries) {
-    try {
-      const response = await axios.get(
-        "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
-      );
-      return response.data.ethereum.usd; // USD per ETH
-    } catch (err) {
-      attempts++;
-      if (attempts >= maxRetries) {
-        throw new Error("Failed to fetch exchange rate after 3 attempts");
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const response = await axios.get("https://api.coingecko.com/api/v3/simple/price", {
+          params: {
+            ids: "ethereum",
+            vs_currencies: "usd",
+          },
+          timeout: 5000,
+        });
+  
+        return response.data.ethereum.usd;
+  
+      } catch (error) {
+        console.warn(`Attempt ${attempt} failed to fetch ETH price. Retrying...`);
+  
+        if (attempt === maxRetries) {
+          throw new Error("Failed to fetch live ETH price after multiple attempts.");
+        }
+  
+        await new Promise((res) => setTimeout(res, delay));
       }
-      await new Promise((resolve) => setTimeout(resolve, delay));
     }
-  }
 };
 
 const sellCrypto = async (req, res) => {
-  const { amount, unit, crypto_currency, password } = req.body;
+  const { amount, unit, crypto_currency, password, ethUsdAtInitiation } = req.body;
 
-  if (!amount || !unit || !crypto_currency || !password) {
-    return res.status(400).json({ message: "All fields are required" });
+  if (!amount || !unit || !crypto_currency || !password || !ethUsdAtInitiation) {
+    return res.status(400).json({ message: "All fields including ethUsdAtInitiation are required" });
   }
 
   if (crypto_currency.toLowerCase() !== "sepolia") {
@@ -63,32 +70,19 @@ const sellCrypto = async (req, res) => {
       return res.status(500).json({ message: "Server wallet address not configured" });
     }
 
-    // Check balance and estimate fee
     const balance = await provider.getBalance(userWallet.address);
 
-    // Estimate gas limit
     const gasLimit = await provider.estimateGas({
       to: serverWalletAddress,
       from: userWallet.address,
       value: amountInWei,
     });
 
-    // Get current gas price
-    // const gasPrice = await provider.getGasPrice();
-    const gasPrice = ((await provider.getFeeData()).maxFeePerGas);
+    const feeData = await provider.getFeeData();
+    const gasPrice = feeData.maxFeePerGas;
 
-    // Total estimated fee
     const estimatedFee = gasLimit * gasPrice;
-
-    // Total cost = amount + fee
     const totalCost = amountInWei + estimatedFee;
-    console.log("totalcost:    ", totalCost)
-    console.log("balance:      ", balance)
-    console.log("amountinwei:  ", amountInWei)
-    console.log("estimatedFee: ", estimatedFee)
-    console.log("gaslimit:     ", gasLimit)
-    console.log("gasprice:     ", gasPrice)
-    console.log("feeData:     ", await provider.getFeeData())
 
     if (balance < totalCost) {
       return res.status(400).json({
@@ -99,8 +93,20 @@ const sellCrypto = async (req, res) => {
       });
     }
 
-    const exchangeRate = await fetchExchangeRateWithRetry();
-    const fiatValueInUSD = amountInEth * exchangeRate;
+    // Fetch live ETH price to compare with initial price
+    const currentEthUsd = await fetchExchangeRateWithRetry();
+    const priceFluctuation = Math.abs((currentEthUsd - ethUsdAtInitiation) / ethUsdAtInitiation) * 100;
+
+    if (priceFluctuation > 1) {
+      return res.status(409).json({
+        message: "ETH price changed by more than 1%. Transaction cancelled.",
+        initialPrice: ethUsdAtInitiation,
+        currentPrice: currentEthUsd,
+        fluctuation: priceFluctuation.toFixed(2) + "%",
+      });
+    }
+
+    const fiatValueInUSD = amountInEth * currentEthUsd;
 
     const tx = await userWallet.sendTransaction({
       to: serverWalletAddress,
