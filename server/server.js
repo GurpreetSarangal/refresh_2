@@ -33,16 +33,23 @@ mongoose.connect(process.env.MONGODB_URI, {
 })
 .then(() => console.log("✅ MongoDB Connected Successfully"))
 .catch((err) => console.error("❌ MongoDB Connection Error:", err));
+require("./services/cryptoDataCron");
 
 // Import Routes
 const authRouter = require("./routes/auth-route");
 const contactRouter = require("./routes/contact-router");
 const walletRouter = require("./routes/wallet-router");
+const cryptoDataRoute  = require("./routes/cryptoDataRoutes");
+
+
 
 // Mount Routes
 app.use("/api/auth", authRouter);
 app.use("/api/form", contactRouter); // Assuming /contact route is defined inside contact-router
 app.use("/api/wallet", walletRouter); // Assuming /contact route is defined inside contact-router
+
+app.use("/api", cryptoDataRoute );
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
