@@ -12,37 +12,43 @@ const servicesData = [
     id: 1, 
     img: service1, 
     title: "Crypto Trading Strategies", 
-    description: "Expert strategies to maximize your trading potential and minimize risks." 
+    description: "Expert strategies to maximize your trading potential and minimize risks.",
+    link: "https://www.tokenmetrics.com/blog/crypto-trading-strategies#1-hodling-an-asset" 
   },
   { 
     id: 2, 
     img: service2, 
     title: "Market Analysis", 
-    description: "In-depth analysis of market trends to help you make informed trading decisions." 
+    description: "In-depth analysis of market trends to help you make informed trading decisions.",
+    link:"https://coinmarketcap.com/"
   },
   { 
     id: 3, 
     img: service3, 
     title: "Portfolio Management", 
-    description: "Comprehensive management of your crypto assets to ensure optimal performance." 
+    description: "Comprehensive management of your crypto assets to ensure optimal performance.",
+    link:"https://beincrypto.com/learn/crypto-portfolio-management/"
   },
   { 
     id: 4, 
     img: service4, 
     title: "Risk Management", 
-    description: "Strategies to identify and mitigate risks associated with cryptocurrency trading." 
+    description: "Strategies to identify and mitigate risks associated with cryptocurrency trading.",
+    link:"https://financialcrimeacademy.org/cryptocurrency-risk-management/"
   },
   { 
     id: 5, 
     img: service5, 
     title: "Regulatory Compliance", 
-    description: "Guidance on navigating the complex regulatory landscape of cryptocurrency." 
+    description: "Guidance on navigating the complex regulatory landscape of cryptocurrency.",
+    link:"https://www.thomsonreuters.com/en-us/posts/corporates/compliance-crypto-industry/"
   },
   { 
     id: 6, 
     img: service6, 
     title: "Educational Resources", 
-    description: "Access to a wealth of resources to enhance your understanding of crypto trading." 
+    description: "Access to a wealth of resources to enhance your understanding of crypto trading.",
+    link:"https://simple.app/blog/crypto-and-education/" 
   },
 ];
 
@@ -79,7 +85,7 @@ const Services = () => {
                   <p className="mb-4">
                     {service.description}
                   </p>
-                  <a className="btn btn-primary rounded-pill py-2 px-4" href="#">
+                  <a className="btn btn-primary rounded-pill py-2 px-4" href={service.link || "#"} target="_blank" rel="noopener noreferrer">
                     Learn More
                   </a>
                 </div>
