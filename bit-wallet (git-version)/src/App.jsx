@@ -14,6 +14,7 @@ import Swap from "./user-pannel/user-pages/Swap";
 import Transfer from "./user-pannel/user-pages/Transfer";
 import Mybalance from "./user-pannel/balance/Mybalance";
 import History from "./user-pannel/history/History"; 
+import Profile from "./user-pannel/profile/Profile";
 
 
 
@@ -59,6 +60,8 @@ const MainLayout = () => {
           <Route path="/transfer" element={<Transfer />} />
           <Route path="/mybalance" element={<Mybalance />} />
           <Route path="/history" element={<History />} />
+          <Route path="/profile" element={<Profile />} />
+          
         </Routes>
       </div>
     </div>

@@ -77,12 +77,7 @@ const Contact = () => {
                       <label htmlFor="email">Your Email</label>
                     </div>
                   </div>
-                  <div className="col-12">
-                    <div className="form-floating">
-                      <input type="text" className="form-control border-0" id="subject" placeholder="Subject" required />
-                      <label htmlFor="subject">Subject</label>
-                    </div>
-                  </div>
+                  
                   <div className="col-12">
                     <div className="form-floating">
                       <textarea className="form-control border-0" placeholder="Leave a message here" id="message" style={{ height: "160px" }} required></textarea>

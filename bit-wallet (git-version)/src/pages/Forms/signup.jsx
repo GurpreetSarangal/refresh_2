@@ -6,7 +6,9 @@ export const Signup = () => {
     username: "",
     email: "",
     password: "",
+    phone_number: "",
   });
+
   const navigate = useNavigate();
 
   const handleInput = (e) => {
@@ -20,17 +22,24 @@ export const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!user.username || !user.email || !user.password) {
+    const { username, email, password, phone_number } = user;
+
+    // Basic validation
+    if (!username || !email || !password || !phone_number) {
       alert("All fields are required!");
       return;
     }
 
-    if (!/\S+@\S+\.\S+/.test(user.email)) {
+    if (!/\S+@\S+\.\S+/.test(email)) {
       alert("Invalid email format!");
       return;
     }
 
-    console.log("User Registered:", user);
+    if (!/^\d{10}$/.test(phone_number)) {
+      alert("Phone number must be 10 digits!");
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:5000/api/auth/register", {
         method: "POST",
@@ -44,7 +53,7 @@ export const Signup = () => {
 
       if (response.ok) {
         alert("Registration successful!");
-        setUser({ username: "", email: "", password: "" });
+        setUser({ username: "", email: "", password: "", phone_number: "" });
         navigate("/login");
       } else {
         alert(data.message || "Registration failed!");
@@ -73,6 +82,7 @@ export const Signup = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
             />
           </div>
+
           <div>
             <label htmlFor="email" className="block text-gray-600">Email</label>
             <input
@@ -86,6 +96,22 @@ export const Signup = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
             />
           </div>
+
+          <div>
+            <label htmlFor="phone_number" className="block text-gray-600">Phone Number</label>
+            <input
+              type="tel"
+              id="phone_number"
+              name="phone_number"
+              value={user.phone_number}
+              onChange={handleInput}
+              placeholder="Enter your phone number"
+              pattern="[0-9]{10}"
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
           <div>
             <label htmlFor="password" className="block text-gray-600">Password</label>
             <input
@@ -99,6 +125,7 @@ export const Signup = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
             />
           </div>
+
           <button
             type="submit"
             className="w-full bg-[#00d084] text-white py-2 rounded-md hover:bg-blue-700 transition duration-300"
@@ -106,7 +133,6 @@ export const Signup = () => {
             Register Now
           </button>
 
-          {/* Already have an account? Link */}
           <p className="text-center text-gray-600 text-sm mt-3">
             Already have an account?{" "}
             <Link to="/login" className="text-blue-600 hover:underline">
