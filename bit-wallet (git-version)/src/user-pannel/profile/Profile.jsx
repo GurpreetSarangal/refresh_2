@@ -1,10 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
-import {
-  LineChart, CirclePower, CircleUser, Coins, History, CreditCard,
-  DollarSign, Repeat, SendHorizontal, Settings, PlusCircle, MinusCircle, X
-} from 'lucide-react';
+import { useNavigate, Link } from "react-router-dom";
 
+import { 
+  Wallet, 
+  LineChart, 
+  CirclePower,
+  Settings, 
+  Bell, 
+  ArrowUpRight, 
+  ArrowDownRight,
+  Menu,
+  X,
+  User,
+  Camera,
+  CreditCard,
+  DollarSign,
+  Repeat,
+  SendHorizontal,
+  CircleUser,
+  Coins,
+  History,
+  ChevronDown,
+  PlusCircle,
+  MinusCircle
+} from 'lucide-react';
 import BuyCryptoForm from '../user-pages/Buyform';
 import SellCryptoForm from '../sell-component/Sellform';
 import Swap from '../../pages/swapcoin/Swapcomp';
@@ -129,71 +148,84 @@ function Profile() {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'dashboard':
+      case 'add-funds':
         return (
-          <div className="p-6">
-            <h2 className="text-xl font-bold">Welcome back, {profileData.name || 'User'}!</h2>
-            <p className="text-gray-600 mt-2">Your crypto dashboard overview.</p>
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h2 className="text-xl font-bold mb-6">Add Funds</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Amount (USD)
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-2 text-gray-500">$</span>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="0.00"
+                      className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Payment Method
+                  </label>
+                  <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="card">Credit/Debit Card</option>
+                    <option value="bank">Bank Transfer</option>
+                    <option value="paypal">PayPal</option>
+                  </select>
+                </div>
+                <button className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                  Add Funds
+                </button>
+              </div>
+            </div>
           </div>
         );
-      case 'add-funds':
-      case 'withdraw':
-      case 'profile':
-      case 'balance':
-      case 'transactions':
-      case 'buy':
-      case 'sell':
-      case 'swap':
-      case 'transfer':
-      case 'logout':
-        return renderTabContent(activeTab);
-      default:
-        return <div className="p-6">Select a tab</div>;
-    }
-  };
 
-  const renderTabContent = (tabId) => {
-    switch (tabId) {
-      case 'add-funds':
-        return (
-          <div className="p-6">
-            <h2 className="text-xl font-bold mb-4">Add Funds</h2>
-            <form className="space-y-4">
-              <div>
-                <label className="block mb-1">Amount</label>
-                <input type="number" className="w-full border rounded px-3 py-2" placeholder="0.00" />
-              </div>
-              <div>
-                <label className="block mb-1">Payment Method</label>
-                <select className="w-full border rounded px-3 py-2">
-                  <option>Credit Card</option>
-                  <option>Bank Transfer</option>
-                </select>
-              </div>
-              <button className="bg-indigo-600 text-white px-4 py-2 rounded">Add Funds</button>
-            </form>
-          </div>
-        );
       case 'withdraw':
         return (
-          <div className="p-6">
-            <h2 className="text-xl font-bold mb-4">Withdraw Amount</h2>
-            <form className="space-y-4">
-              <div>
-                <label className="block mb-1">Amount</label>
-                <input type="number" className="w-full border rounded px-3 py-2" placeholder="0.00" />
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h2 className="text-xl font-bold mb-6">Withdraw Amount</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Amount (USD)
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-2 text-gray-500">$</span>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="0.00"
+                      className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Withdrawal Method
+                  </label>
+                  <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="bank">Bank Account</option>
+                    <option value="paypal">PayPal</option>
+                    <option value="crypto">Crypto Wallet</option>
+                  </select>
+                </div>
+                <button className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                  Withdraw
+                </button>
               </div>
-              <div>
-                <label className="block mb-1">Method</label>
-                <select className="w-full border rounded px-3 py-2">
-                  <option>Bank Account</option>
-                  <option>Crypto Wallet</option>
-                </select>
-              </div>
-              <button className="bg-indigo-600 text-white px-4 py-2 rounded">Withdraw</button>
-            </form>
+            </div>
           </div>
         );
+
       case 'profile':
   return (
     <div className="space-y-6">
@@ -223,7 +255,7 @@ function Profile() {
           </div>
           <div className="p-4 bg-gray-50 rounded-lg">
             <h3 className="font-medium">Fiat Balance (USD)</h3>
-            <p className="text-indigo-600 font-bold text-xl">{wallet?.balance ? Number(wallet.balance).toFixed(4) : "0.0000"} ETH</p>
+            <p className="text-indigo-600 font-bold text-xl">${user?.fiat_balance ? Number(user.fiat_balance).toFixed(2) : "0.00"}</p>
           </div>
         </div>
       </div>
@@ -233,45 +265,198 @@ function Profile() {
       
       case 'balance':
         return (
-          <div className="p-6">
-            <h2 className="text-xl font-bold mb-4">My Balance</h2>
-            <p className="text-3xl font-bold text-indigo-600">$24,532.21</p>
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h2 className="text-xl font-bold mb-4">Total Balance</h2>
+              <div className="text-3xl font-bold text-indigo-600">$24,532.21</div>
+              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <h3 className="font-medium">Available Balance</h3>
+                  <p className="text-2xl font-bold">$22,123.45</p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <h3 className="font-medium">Locked Balance</h3>
+                  <p className="text-2xl font-bold">$2,408.76</p>
+                </div>
+              </div>
+            </div>
           </div>
         );
+
       case 'transactions':
         return (
-          <div className="p-6">
-            <h2 className="text-xl font-bold mb-4">Recent Transactions</h2>
-            {/* Placeholder for transactions */}
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h2 className="text-xl font-bold mb-4">Recent Transactions</h2>
+              <div className="space-y-4">
+                {[
+                  { type: 'Buy', crypto: 'Bitcoin', amount: '0.05 BTC', value: '$2,341.23', date: '2024-03-15', status: 'Completed' },
+                  { type: 'Sell', crypto: 'Ethereum', amount: '1.5 ETH', value: '$4,562.10', date: '2024-03-14', status: 'Completed' },
+                  { type: 'Transfer', crypto: 'USDT', amount: '500 USDT', value: '$500.00', date: '2024-03-13', status: 'Pending' },
+                  { type: 'Swap', crypto: 'BTC to ETH', amount: '0.02 BTC', value: '$912.45', date: '2024-03-12', status: 'Completed' },
+                ].map((tx, index) => (
+                  <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div>
+                      <div className="font-medium">{tx.type} {tx.crypto}</div>
+                      <div className="text-sm text-gray-500">{tx.date}</div>
+                    </div>
+                    <div className="text-right">
+                      <div>{tx.amount}</div>
+                      <div className={`text-sm ${tx.status === 'Completed' ? 'text-green-600' : 'text-orange-500'}`}>
+                        {tx.status}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         ); 
       
       case 'buy':
-        return <BuyCryptoForm />;
+        return (<> <BuyCryptoForm /> </>)
+      
       case 'sell':
-        return <SellCryptoForm />;
+        return (<> <SellCryptoForm /> </>);
+      
       case 'swap':
-        return <Swap />;
+        return (<> <Swap /> </>);
+      
       case 'transfer':
-        return <SendCoin />;
+        return (<><SendCoin /> </>);
+      
       case 'logout':
-        return (
-          <div className="p-6 max-w-md mx-auto bg-white rounded-lg shadow">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Confirm Logout</h2>
-              <button onClick={() => setActiveTab('dashboard')}><X /></button>
-            </div>
-            <p>Are you sure you want to logout, {profileData.name}?</p>
-            <form onSubmit={handleLogout} className="mt-4 space-y-4">
-              <input type="hidden" value={profileData.email} />
-              <button type="submit" className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700">
-                Logout
+        return (<> 
+        
+        <div className="flex items-center justify-center ">
+      <div className="bg-white rounded-xl p-6 w-full max-w-md">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold">Logout</h2>
+          <button 
+            onClick={() => setActiveTab('dashboard')}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        <div className="space-y-6">
+          
+          <form onSubmit={handleLogout} method="post">
+
+              {/* Form Fields */}
+              <div className="space-y-4">
+                <div>
+                <h5 className="text-2xl font-bold">Do you really want to logout?</h5>
+                </div>
+                
+                <div>
+                  
+                  <input
+                    type="email"
+                    hidden
+                    value={profileData.email}
+                    onChange={(e) => setProfileData({...profileData, email: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  
+                  <input
+                    type="tel"
+                    hidden
+                    value={profileData.phone}
+                    onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+              </div>
+
+              {/* Save Button */}
+              <button 
+                // onClick={() => setIsProfileOpen(false)}
+                type="submit"
+                className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Confirm Logout  
               </button>
-            </form>
-          </div>
-        );
+          </form>
+        </div>
+      </div>
+    </div>
+        
+         </>);
+      
+      case 'settings':
+        return (<></>);
+
       default:
-        return null;
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Portfolio Value Card */}
+              <div className="bg-white p-6 rounded-xl shadow-sm">
+                <h3 className="text-gray-500 text-sm">Portfolio Value</h3>
+                <div className="mt-2 flex items-center">
+                  <span className="text-2xl font-bold">$24,532.21</span>
+                  <span className="ml-2 text-green-500 flex items-center">
+                    <ArrowUpRight size={16} />
+                    2.3%
+                  </span>
+                </div>
+              </div>
+
+              {/* 24h Change Card */}
+              <div className="bg-white p-6 rounded-xl shadow-sm">
+                <h3 className="text-gray-500 text-sm">24h Change</h3>
+                <div className="mt-2 flex items-center">
+                  <span className="text-2xl font-bold">-$421.50</span>
+                  <span className="ml-2 text-red-500 flex items-center">
+                    <ArrowDownRight size={16} />
+                    1.2%
+                  </span>
+                </div>
+              </div>
+
+              {/* Assets Card */}
+              <div className="bg-white p-6 rounded-xl shadow-sm">
+                <h3 className="text-gray-500 text-sm">Total Assets</h3>
+                <div className="mt-2">
+                  <span className="text-2xl font-bold">5</span>
+                  <span className="text-gray-500 ml-2">cryptocurrencies</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Assets List */}
+            <div className="mt-8 bg-white rounded-xl shadow-sm">
+              <div className="p-6">
+                <h2 className="text-xl font-semibold">Your Assets</h2>
+                <div className="mt-4 space-y-4">
+                  {[
+                    { name: 'Bitcoin', symbol: 'BTC', value: '$16,432.12', change: '+1.2%', amount: '0.354 BTC' },
+                    { name: 'Ethereum', symbol: 'ETH', value: '$5,321.45', change: '-0.8%', amount: '2.154 ETH' },
+                    { name: 'Cardano', symbol: 'ADA', value: '$2,143.78', change: '+3.1%', amount: '1,432 ADA' },
+                  ].map((asset) => (
+                    <div key={asset.symbol} className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg">
+                      <div>
+                        <h3 className="font-medium">{asset.name}</h3>
+                        <span className="text-gray-500 text-sm">{asset.amount}</span>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-medium">{asset.value}</div>
+                        <span className={asset.change.startsWith('+') ? 'text-green-500' : 'text-red-500'}>
+                          {asset.change}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </>
+        );
     }
   };
 
@@ -352,38 +537,74 @@ function Profile() {
   );
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
-      {isSidebarOpen && (
-        <div className="w-64 bg-white shadow-lg p-4 space-y-6">
-          <div className="text-xl font-bold">Crypto Dashboard</div>
-          <div>
-            {dashboardItems.map(({ id, icon: Icon, label }) => (
-              <button
-                key={id}
-                onClick={() => setActiveTab(id)}
-                className={`flex items-center space-x-3 px-4 py-2 w-full text-left hover:bg-gray-100 rounded ${activeTab === id ? 'bg-gray-200' : ''}`}
+      <div className={`${isSidebarOpen ? 'w-64' : 'w-20'} bg-white shadow-lg transition-all duration-300 hidden md:block`}>
+        <div className="p-4">
+          <div className="flex items-center space-x-2 mb-8">
+            <Wallet className="text-indigo-600" size={24} />
+            {isSidebarOpen && <span className="font-bold text-xl">CryptoPanel</span>}
+          </div>
+          
+          <nav className="space-y-2">
+            {/* Dashboard Dropdown */}
+            <div className="space-y-1">
+              <button 
+                onClick={() => setIsDashboardOpen(!isDashboardOpen)}
+                className={`w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 ${
+                  dashboardItems.some(item => item.id === activeTab) ? 'bg-indigo-50 text-indigo-600' : ''
+                }`}
               >
-                <Icon size={18} />
-                <span>{label}</span>
+                <div className="flex items-center space-x-2">
+                  <LineChart size={20} />
+                  {isSidebarOpen && <span>Dashboard</span>}
+                </div>
+                {isSidebarOpen && (
+                  <ChevronDown 
+                    size={16} 
+                    className={`transform transition-transform ${isDashboardOpen ? 'rotate-180' : ''}`} 
+                  />
+                )}
+              </button>
+              
+              {isDashboardOpen && isSidebarOpen && (
+                <div className="pl-8 space-y-1">
+                  {dashboardItems.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => setActiveTab(item.id)}
+                      className={`w-full flex items-center space-x-2 p-2 rounded-lg ${
+                        activeTab === item.id 
+                          ? 'bg-indigo-50 text-indigo-600' 
+                          : 'hover:bg-gray-50'
+                      }`}
+                    >
+                      <item.icon size={18} />
+                      <span>{item.label}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Other Navigation Items */}
+            {navItems.map((item) => (
+              <button 
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`w-full flex items-center space-x-2 p-3 rounded-lg ${
+                  activeTab === item.id 
+                    ? 'bg-indigo-50 text-indigo-600' 
+                    : 'hover:bg-gray-50'
+                }`}
+              >
+                <item.icon size={20} />
+                {isSidebarOpen && <span>{item.label}</span>}
               </button>
             ))}
-          </div>
-          <hr />
-          <div>
-            {navItems.map(({ id, icon: Icon, label }) => (
-              <button
-                key={id}
-                onClick={() => setActiveTab(id)}
-                className={`flex items-center space-x-3 px-4 py-2 w-full text-left hover:bg-gray-100 rounded ${activeTab === id ? 'bg-gray-200' : ''}`}
-              >
-                <Icon size={18} />
-                <span>{label}</span>
-              </button>
-            ))}
-          </div>
+          </nav>
         </div>
-      )}
+      </div>
 
       {/* Main Content */}
       <div className="flex-1">
@@ -398,6 +619,7 @@ function Profile() {
             </button>
             <div className="flex items-center space-x-4">
               <button className="p-2 hover:bg-gray-100 rounded-full">
+                <Bell size={20} />
               </button>
               <button 
                 onClick={() => setIsProfileOpen(true)}
