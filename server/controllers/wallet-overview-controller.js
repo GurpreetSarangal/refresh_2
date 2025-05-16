@@ -62,7 +62,7 @@ const getPortfolio = async (req, res) => {
         change_24h_percent: eth24hChange,
       },
     ];
-
+ 
     // Respond with portfolio data
     res.status(200).json({
       total_value_usd: portfolioValueUsd,

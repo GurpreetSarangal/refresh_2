@@ -29,37 +29,64 @@ import SellCryptoForm from '../sell-component/Sellform';
 import Swap from '../../pages/swapcoin/Swapcomp';
 import SendCoin from '../funds/Sendcoin';
 
-function App() {
+function Profile() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
-  const [profileData, setProfileData] = useState({
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    phone: '+1 (555) 123-4567',
-    imageUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80'
+  const [user, setUser] = useState(null);
+  const [wallet, setWallet] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+
+
+
+   const [profileData, setProfileData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    walletAddress: '',
+    fiatBalance: 0.00
   });
+
   const navigate = useNavigate();
-  const [photos, setPhotos] = useState([]);
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
-  
-    fetch('http://localhost:5000/api/wallet/profile', {
-      headers: {
-        Authorization: `Bearer ${token}`
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("No authentication token found. Please login.");
+        setLoading(false);
+        return;
       }
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setProfileData(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching profile:", error);
-      });
+
+      try {
+        const res = await fetch("http://localhost:5000/api/wallet/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch profile data");
+        }
+
+        const data = await res.json();
+        setUser(data.user);
+        setWallet(data.wallet);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message || "Something went wrong");
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
   }, []);
-  
+
+  if (loading) return <p>Loading profile...</p>;
+  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
+
 
   const dashboardItems = [
     { id: 'dashboard', icon: LineChart, label: 'Overview' },
@@ -79,37 +106,45 @@ function App() {
     { id: 'settings', icon: Settings, label: 'Settings' },
   ];
 
-  const URL = "http://localhost:5000/api/auth/login";
-
+  // Updated logout API endpoint
+  const LOGOUT_URL = "http://localhost:5000/api/auth/logout";
 
   const handleLogout = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(LOGOUT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({ email: profileData.email }) // if needed
+    });
+
+    let responseData;
     try {
-      const response = await fetch(URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(profileData),
-      });
-
-      const responseData = await response.json();
-      console.log("after logout: ", responseData);
-
-      if (response.ok) {
-        // Save token in localStorage
-        localStorage.setItem("token", responseData.token);
-
-        // Navigate to home page after login
-        setTimeout(() => navigate(""), 500);
-      } else {
-        alert(responseData.message || "Logout failed. Please try again.");
-      }
-    } catch (error) {
-      console.log("Logout Error:", error);
-      alert("Something went wrong. Please check your network and try again.");
+      responseData = await response.json();
+    } catch (err) {
+      // If JSON parsing fails, just fallback to text (likely an HTML error page)
+      const text = await response.text();
+      console.error("Non-JSON response:", text);
+      throw new Error("Logout failed due to server error");
     }
-  };
+
+    if (response.ok) {
+      localStorage.removeItem("token");
+      setTimeout(() => navigate("/"), 500);
+    } else {
+      alert(responseData.message || "Logout failed. Please try again.");
+    }
+  } catch (error) {
+    console.log("Logout Error:", error);
+    alert("Something went wrong. Please check your network and try again.");
+  }
+};
+
+
 
   const renderContent = () => {
     switch (activeTab) {
@@ -192,33 +227,41 @@ function App() {
         );
 
       case 'profile':
-        return (
-          <div className="space-y-6">
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <div className="flex items-center space-x-4">
-                <img 
-                  src={profileData.imageUrl} 
-                  alt="Profile" 
-                  className="w-20 h-20 rounded-full"
-                />
-                <div>
-                  <h2 className="text-2xl font-bold">{profileData.name}</h2>
-                  <p className="text-gray-500">{profileData.email}</p>
-                </div>
-              </div>
-              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <h3 className="font-medium">Account Status</h3>
-                  <p className="text-green-600">Verified</p>
-                </div>
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <h3 className="font-medium">Member Since</h3>
-                  <p>January 2024</p>
-                </div>
-              </div>
-            </div>
+  return (
+    <div className="space-y-6">
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="flex items-center space-x-4">
+          
+          <div>
+           <h2 className="text-2xl font-bold"><strong>Name:</strong> {user?.username || "N/A"}</h2>
+          <p className="text-gray-500"><strong>Email:</strong> {user?.email || "N/A"}</p>
+          <p className="text-gray-500"><strong>Phone Number:</strong> {user?.phone_number || "N/A"}</p>
+
           </div>
-        );
+        </div>
+
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <h3 className="font-medium">Account Status</h3>
+            <p className="text-green-600">Verified</p>
+          </div>
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <h3 className="font-medium">Member Since</h3>
+            <p>January 2024</p>
+          </div>
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <h3 className="font-medium">Wallet Address</h3>
+            <p className="break-all">{user?.accounts?.[0]?.wallet_address || "N/A"}</p>
+          </div>
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <h3 className="font-medium">Fiat Balance (USD)</h3>
+            <p className="text-indigo-600 font-bold text-xl">{wallet?.balance ? Number(wallet.balance).toFixed(4) : "0.0000"} ETH</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
       
       case 'balance':
         return (
@@ -268,7 +311,7 @@ function App() {
               </div>
             </div>
           </div>
-        );
+        ); 
       
       case 'buy':
         return (<> <BuyCryptoForm /> </>)
@@ -434,11 +477,7 @@ function App() {
           {/* Profile Image */}
           <div className="flex flex-col items-center">
             <div className="relative">
-              <img 
-                src={profileData.imageUrl} 
-                alt="Profile" 
-                className="w-24 h-24 rounded-full object-cover"
-              />
+             
               <button className="absolute bottom-0 right-0 bg-indigo-600 p-2 rounded-full text-white hover:bg-indigo-700">
                 <Camera size={16} />
               </button>
@@ -446,7 +485,7 @@ function App() {
             <p className="text-sm text-gray-500 mt-2">Click the camera icon to update photo</p>
           </div>
 
-          {/* Form Fields */}
+          {/* Form Fields */} 
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -586,11 +625,7 @@ function App() {
                 onClick={() => setIsProfileOpen(true)}
                 className="relative group"
               >
-                <img 
-                  src={profileData.imageUrl}
-                  alt="User" 
-                  className="w-8 h-8 rounded-full ring-2 ring-transparent group-hover:ring-indigo-500 transition-all"
-                />
+               
                 <div className="absolute top-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
               </button>
             </div>
@@ -604,9 +639,9 @@ function App() {
       </div>
 
       {/* Profile Edit Modal */}
-      {isProfileOpen && <ProfileEdit />}
+      {/* {isProfileOpen && <ProfileEdit />} */}
     </div>
   );
 }
 
-export default App;
+export default Profile;

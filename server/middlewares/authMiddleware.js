@@ -11,6 +11,8 @@ const authMiddleware = (req, res, next) => {
 
     const decoded = jwt.verify(token, SECRET_KEY); // 🔥 Decoding token
     req.user = decoded; // Attach user info (userId) to request
+    // req.user =  User.findById(decode.userId).select("-password");
+
     next();
   } catch (error) {
     console.error("Authentication error:", error);
@@ -19,3 +21,4 @@ const authMiddleware = (req, res, next) => {
 };
 
 module.exports = authMiddleware;
+ 
