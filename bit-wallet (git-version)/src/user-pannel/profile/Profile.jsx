@@ -233,7 +233,7 @@ function Profile() {
         <div className="flex items-center space-x-4">
           
           <div>
-           <h2 className="text-2xl font-bold"><strong>Name:</strong> {user?.username || "N/A"}</h2>
+           <h2 className="text-2xl font-bold"><strong>Username:</strong> {user?.username || "N/A"}</h2>
           <p className="text-gray-500"><strong>Email:</strong> {user?.email || "N/A"}</p>
           <p className="text-gray-500"><strong>Phone Number:</strong> {user?.phone_number || "N/A"}</p>
 
@@ -268,15 +268,15 @@ function Profile() {
           <div className="space-y-6">
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h2 className="text-xl font-bold mb-4">Total Balance</h2>
-              <div className="text-3xl font-bold text-indigo-600">$24,532.21</div>
+              <div className="text-3xl font-bold text-indigo-600">${user?.fiat_balance ? Number(user.fiat_balance).toFixed(2) : "0.00"}</div>
               <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 bg-gray-50 rounded-lg">
                   <h3 className="font-medium">Available Balance</h3>
-                  <p className="text-2xl font-bold">$22,123.45</p>
+                  <p className="text-2xl font-bold">${user?.fiat_balance ? Number(user.fiat_balance).toFixed(2) : "0.00"}</p>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-lg">
                   <h3 className="font-medium">Locked Balance</h3>
-                  <p className="text-2xl font-bold">$2,408.76</p>
+                  <p className="text-2xl font-bold">$28.76</p>
                 </div>
               </div>
             </div>
@@ -399,7 +399,7 @@ function Profile() {
               <div className="bg-white p-6 rounded-xl shadow-sm">
                 <h3 className="text-gray-500 text-sm">Portfolio Value</h3>
                 <div className="mt-2 flex items-center">
-                  <span className="text-2xl font-bold">$24,532.21</span>
+                  <span className="text-2xl font-bold">${user?.fiat_balance ? Number(user.fiat_balance).toFixed(2) : "0.00"}</span>
                   <span className="ml-2 text-green-500 flex items-center">
                     <ArrowUpRight size={16} />
                     2.3%
@@ -411,9 +411,9 @@ function Profile() {
               <div className="bg-white p-6 rounded-xl shadow-sm">
                 <h3 className="text-gray-500 text-sm">24h Change</h3>
                 <div className="mt-2 flex items-center">
-                  <span className="text-2xl font-bold">-$421.50</span>
-                  <span className="ml-2 text-red-500 flex items-center">
-                    <ArrowDownRight size={16} />
+                  <span className="text-2xl font-bold">-$11.50</span>
+                  <span className="ml-2 text-green-500 flex items-center">
+                    <ArrowUpRight size={16} />
                     1.2%
                   </span>
                 </div>
@@ -423,7 +423,7 @@ function Profile() {
               <div className="bg-white p-6 rounded-xl shadow-sm">
                 <h3 className="text-gray-500 text-sm">Total Assets</h3>
                 <div className="mt-2">
-                  <span className="text-2xl font-bold">5</span>
+                  <span className="text-2xl font-bold">3</span>
                   <span className="text-gray-500 ml-2">cryptocurrencies</span>
                 </div>
               </div>
@@ -460,81 +460,7 @@ function Profile() {
     }
   };
 
-  const ProfileEdit = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Edit Profile</h2>
-          <button 
-            onClick={() => setIsProfileOpen(false)}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            <X size={24} />
-          </button>
-        </div>
-
-        <div className="space-y-6">
-          {/* Profile Image */}
-          <div className="flex flex-col items-center">
-            <div className="relative">
-             
-              <button className="absolute bottom-0 right-0 bg-indigo-600 p-2 rounded-full text-white hover:bg-indigo-700">
-                <Camera size={16} />
-              </button>
-            </div>
-            <p className="text-sm text-gray-500 mt-2">Click the camera icon to update photo</p>
-          </div>
-
-          {/* Form Fields */} 
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name
-              </label>
-              <input
-                type="text"
-                value={profileData.name}
-                onChange={(e) => setProfileData({...profileData, name: e.target.value})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email Address
-              </label>
-              <input
-                type="email"
-                value={profileData.email}
-                onChange={(e) => setProfileData({...profileData, email: e.target.value})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                value={profileData.phone}
-                onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
-          </div>
-
-          {/* Save Button */}
-          <button 
-            onClick={() => setIsProfileOpen(false)}
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-          >
-            Save Changes
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+ 
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -619,15 +545,9 @@ function Profile() {
             </button>
             <div className="flex items-center space-x-4">
               <button className="p-2 hover:bg-gray-100 rounded-full">
-                <Bell size={20} />
               </button>
-              <button 
-                onClick={() => setIsProfileOpen(true)}
-                className="relative group"
-              >
-               
-                <div className="absolute top-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-              </button>
+               <User size={30} className='text-blue-500'/>
+             <h1> {user?.username || "N/A"}</h1>
             </div>
           </div>
         </header>
