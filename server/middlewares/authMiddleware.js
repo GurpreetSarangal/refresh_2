@@ -11,16 +11,10 @@ const authMiddleware = (req, res, next) => {
       return res.status(401).json({ message: "Unauthorized: No token provided" });
     }
 
-    // Extract token from Bearer scheme
-    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, SECRET_KEY); // 🔥 Decoding token
+    req.user = decoded; // Attach user info (userId) to request
+    // req.user =  User.findById(decode.userId).select("-password");
 
-    // Verify the token using the secret key
-    const decoded = jwt.verify(token, SECRET_KEY);
-
-    // Attach the decoded token payload (e.g., user information) to the request object
-    req.user = decoded; 
-
-    // Proceed to the next middleware or route handler
     next();
   } catch (error) {
     console.error("❌ Authentication error:", error.message);
@@ -31,3 +25,4 @@ const authMiddleware = (req, res, next) => {
 };
 
 module.exports = authMiddleware;
+ 

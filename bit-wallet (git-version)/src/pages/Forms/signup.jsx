@@ -24,7 +24,6 @@ export const Signup = () => {
 
     const { username, email, password, phone_number } = user;
 
-    // Basic validation
     if (!username || !email || !password || !phone_number) {
       alert("All fields are required!");
       return;
@@ -32,11 +31,6 @@ export const Signup = () => {
 
     if (!/\S+@\S+\.\S+/.test(email)) {
       alert("Invalid email format!");
-      return;
-    }
-
-    if (!/^\d{10}$/.test(phone_number)) {
-      alert("Phone number must be 10 digits!");
       return;
     }
 
@@ -67,7 +61,9 @@ export const Signup = () => {
   return (
     <section className="flex justify-center items-center mt-20">
       <main className="w-full max-w-md p-6 bg-white shadow-lg rounded-lg">
-        <h1 className="text-2xl font-bold text-gray-700 text-center mb-6">Registration Form</h1>
+        <h1 className="text-2xl font-bold text-gray-700 text-center mb-6">
+          Registration Form
+        </h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="username" className="block text-gray-600">Username</label>
@@ -125,7 +121,19 @@ export const Signup = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
             />
           </div>
-
+          <div>
+            <label htmlFor="phone_number" className="block text-gray-600">Phone Number</label>
+            <input
+              type="tel"
+              id="phone_number"
+              name="phone_number"
+              value={user.phone_number}
+              onChange={handleInput}
+              placeholder="Enter your phone number"
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
           <button
             type="submit"
             className="w-full bg-[#00d084] text-white py-2 rounded-md hover:bg-blue-700 transition duration-300"

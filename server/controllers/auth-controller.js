@@ -118,9 +118,83 @@ const getUserProfile = async (req, res) => {
 
     res.status(200).json(user);
   } catch (error) {
-    console.error("❌ Error in getUserProfile:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json("internal server erro")
+    
+  }
+}
+
+
+
+const ENCRYPTION_ALGORITHM = "aes-256-cbc";
+
+function encryptPrivateKey(privateKey, password) {
+  const key = crypto.scryptSync(password, "salt", 32); // derive key
+  const iv = crypto.randomBytes(16); // initialization vector
+  const cipher = crypto.createCipheriv(ENCRYPTION_ALGORITHM, key, iv);
+
+  let encrypted = cipher.update(privateKey, "utf8", "hex");
+  encrypted += cipher.final("hex");
+
+  return {
+    encryptedPrivateKey: encrypted,
+    iv: iv.toString("hex"),
+  };
+}
+
+// Logout Logic
+const logout = async (req, res) => {
+  try {
+    
+    return res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    console.error("❌ Error in Logout:", error);
+    return res.status(500).json({ message: "Server error during logout" });
   }
 };
 
-module.exports = { home, register, login, getUserProfile };
+
+
+// fetch data from database
+const getUserProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // --- Fetch wallet data using `fetch` ---
+    let walletData = {};
+    try {
+      if (user.walletAddress) {
+        const response = await fetch(`https://api.getlock.io/wallet/${user.walletAddress}`);
+        if (response.ok) {
+          walletData = await response.json();
+        } else {
+          console.error("Wallet fetch failed with status:", response.status);
+        }
+      }
+    } catch (walletErr) {
+      console.error("Error fetching wallet data:", walletErr.message);
+    }
+
+    // --- Send user + wallet data ---
+    res.status(200).json({
+      user,
+      wallet: walletData,
+    });
+
+  } catch (error) {
+    console.error("Profile fetch error:", error.message);
+    res.status(500).json({ message: "Server error while fetching profile" });
+  }
+};
+
+
+
+
+
+// ✅ Export both functions
+module.exports = { home, register, login, getUserProfile, logout };
+
