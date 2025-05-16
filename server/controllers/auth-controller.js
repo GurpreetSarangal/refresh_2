@@ -166,10 +166,7 @@ function encryptPrivateKey(privateKey, password) {
 // Logout Logic
 const logout = async (req, res) => {
   try {
-    // If you're using cookies for token storage:
-    // res.clearCookie("token");
-
-    // If using frontend-only JWT storage, no backend state to clear:
+    
     return res.status(200).json({ message: "Logout successful" });
   } catch (error) {
     console.error("❌ Error in Logout:", error);
