@@ -398,7 +398,6 @@ function Profile() {
             </button>
             <div className="flex items-center space-x-4">
               <button className="p-2 hover:bg-gray-100 rounded-full">
-                <Bell size={20} />
               </button>
               <button 
                 onClick={() => setIsProfileOpen(true)}

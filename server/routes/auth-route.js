@@ -16,6 +16,6 @@ router.route("/profile").get(authMiddleware, authControllers.getUserProfile);
 
 // ✅ Protected route to fetch user details after login
 router.route("/user/profile")
-  .get(authenticateToken, authControllers.getUserProfile);
+  .get(authMiddleware, authControllers.getUserProfile);
 
 module.exports = router;

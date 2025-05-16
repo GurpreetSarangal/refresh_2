@@ -110,22 +110,10 @@ const login = async (req, res) => {
   }
 };
 
-// ✅ Get User Profile
-const getUserProfile = async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id).select("-password -accounts.private_key");
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(500).json("internal server erro")
-    
-  }
-}
 
 
 
-const ENCRYPTION_ALGORITHM = "aes-256-cbc";
+
 
 function encryptPrivateKey(privateKey, password) {
   const key = crypto.scryptSync(password, "salt", 32); // derive key
