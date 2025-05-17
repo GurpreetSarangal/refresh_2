@@ -217,6 +217,32 @@ const getUserProfile = async (req, res) => {
 
 
 
-// ✅ Export both functions
-module.exports = { home, register, login, getUserProfile, logout };
+const Contact = require("../models/contact-model");
 
+const contactForm = async (req, res) => {
+  try {
+    const { username, email, message } = req.body;
+
+    if (!username || !email || !message) {
+      return res.status(400).json({ msg: "All fields are required" });
+    }
+
+    await Contact.create({ username, email, message });
+    res.status(201).json({ msg: "Message sent successfully" });
+
+  } catch (error) {
+    console.error("❌ Contact form error:", error);
+    res.status(500).json({ msg: "Server error. Please try again later." });
+  }
+};
+
+
+
+
+
+
+
+// ✅ Export both functions
+module.exports = { home, register, login, getUserProfile, logout, contactForm };
+
+ 

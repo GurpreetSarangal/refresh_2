@@ -4,6 +4,7 @@ const authControllers = require("../controllers/auth-controller");
 const validate = require("../middlewares/validate-middleware")
 const signupSchema = require("../validators/auth-validator");
 const authMiddleware = require("../middlewares/authMiddleware"); // or wherever it is
+const contactController = require("../controllers/auth-controller");
 
 
 
@@ -15,4 +16,9 @@ router.route("/profile").get(authMiddleware, authControllers.getUserProfile);
 
 
 
-module.exports = router;
+// Contact form route
+router.route("/contact").post(contactController.contactForm);
+
+
+
+module.exports = router; 

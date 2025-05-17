@@ -33,3 +33,4 @@ router.post('/update-setting', authMiddleware, profileProvider);
 
 
 module.exports = router;
+ 
