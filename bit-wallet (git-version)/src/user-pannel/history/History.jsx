@@ -1,63 +1,147 @@
-import React, { useEffect } from "react";
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
-import { CryptoState } from "../../CryptoContext"; // Import context to access user data
-import UserPanel from "../Userpannel";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Divider,
+} from "@mui/material";
 
-const History = () => {
-  const { transactions } = CryptoState(); // Access transactions from context
-  const { userHoldings } = CryptoState(); // Access user holdings from context
+const TransactionHistory = () => {
+  const [transactions, setTransactions] = useState([]);
+  const [walletAddress, setWalletAddress] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [selectedTx, setSelectedTx] = useState(null);
+
+  const fetchRecentTransactions = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:5000/api/wallet/recent", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to fetch transactions");
+
+      setWalletAddress(data.walletAddress);
+      setTransactions(data.transactions);
+    } catch (err) {
+      console.error("Error fetching transactions:", err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // You can replace the static transactions with dynamic ones from an API or database
-    // For example: fetchTransactionHistory();
-  }, [transactions]); // Add `transactions` to the dependency array to listen for updates
+    fetchRecentTransactions();
+  }, []);
 
   return (
     <>
-      <UserPanel />
-      <Box sx={{ padding: "20px", maxWidth: "800px", margin: "auto" }}>
-        <Typography variant="h4" sx={{ marginBottom: "20px" }}>
-          Transaction History
-        </Typography>
+      <Box sx={{ padding: "20px", maxWidth: "1000px", margin: "auto" }}>
+        {walletAddress && (
+          <Typography variant="subtitle2" sx={{ marginBottom: "20px", fontSize: "30px" }}>
+            Wallet Address: {walletAddress.slice(0, 8)}...{walletAddress.slice(-6)}
+          </Typography>
+        )}
 
-        {/* Display the transaction table */}
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="transaction history table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Transaction ID</TableCell>
-                <TableCell>Coin</TableCell>
-                <TableCell>Quantity</TableCell>
-                <TableCell>Price</TableCell>
-                <TableCell>Transaction Type</TableCell>
-                <TableCell>Date</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {transactions.length > 0 ? (
-                transactions.map((transaction) => (
-                  <TableRow key={transaction.id}>
-                    <TableCell>{transaction.id}</TableCell>
-                    <TableCell>{userHoldings[transaction.coin]?.name || transaction.coin.toUpperCase()}</TableCell>
-                    <TableCell>{transaction.quantity}</TableCell>
-                    <TableCell>{transaction.price}</TableCell>
-                    <TableCell>{transaction.transactionType}</TableCell>
-                    <TableCell>{transaction.date}</TableCell>
-                  </TableRow>
-                ))
-              ) : (
+        {loading ? (
+          <Box sx={{ textAlign: "center", mt: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Typography color="error">{error}</Typography>
+        ) : (
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="transaction history table">
+              <TableHead>
                 <TableRow>
-                  <TableCell colSpan={6} align="center">
-                    No transaction history available.
-                  </TableCell>
+                  <TableCell>Txn Hash</TableCell>
+                  <TableCell>From</TableCell>
+                  <TableCell>To</TableCell>
+                  <TableCell>Amount (ETH)</TableCell>
+                  <TableCell>Block</TableCell>
+                  <TableCell>Timestamp</TableCell>
+                  <TableCell>Action</TableCell> {/* New column for button */}
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {transactions.length > 0 ? (
+                  transactions.map((tx) => (
+                    <TableRow key={tx.hash}>
+                      <TableCell>{tx.hash.slice(0, 6)}...{tx.hash.slice(-4)}</TableCell>
+                      <TableCell>{tx.from.slice(0, 6)}...{tx.from.slice(-4)}</TableCell>
+                      <TableCell>{tx.to.slice(0, 6)}...{tx.to.slice(-4)}</TableCell>
+                      <TableCell>{(Number(tx.value) / 1e18).toFixed(4)}</TableCell>
+                      <TableCell>{tx.blockNumber}</TableCell>
+                      <TableCell>{new Date(tx.timeStamp * 1000).toLocaleString()}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          onClick={() => setSelectedTx(tx)}
+                        >
+                          View Details
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={7} align="center">
+                      No recent transactions found.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
       </Box>
+
+      {/* Transaction Detail Dialog */}
+      <Dialog open={!!selectedTx} onClose={() => setSelectedTx(null)} fullWidth maxWidth="md">
+        <DialogTitle>Transaction Details</DialogTitle>
+        <DialogContent dividers>
+          {selectedTx && (
+            <>
+              <Typography><strong>Hash:</strong> {selectedTx.hash}</Typography>
+              <Divider sx={{ my: 1 }} />
+              <Typography><strong>From:</strong> {selectedTx.from}</Typography>
+              <Typography><strong>To:</strong> {selectedTx.to}</Typography>
+              <Typography><strong>Value:</strong> {(Number(selectedTx.value) / 1e18).toFixed(6)} ETH</Typography>
+              <Typography><strong>Block Number:</strong> {selectedTx.blockNumber}</Typography>
+              <Typography><strong>Gas:</strong> {selectedTx.gas}</Typography>
+              <Typography><strong>Gas Price:</strong> {selectedTx.gasPrice}</Typography>
+              <Typography><strong>Nonce:</strong> {selectedTx.nonce}</Typography>
+              <Typography><strong>Timestamp:</strong> {new Date(selectedTx.timeStamp * 1000).toLocaleString()}</Typography>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setSelectedTx(null)} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
 
-export default History;
+export default TransactionHistory;

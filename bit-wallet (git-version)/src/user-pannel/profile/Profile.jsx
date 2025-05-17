@@ -28,6 +28,7 @@ import BuyCryptoForm from '../user-pages/Buyform';
 import SellCryptoForm from '../sell-component/Sellform';
 import Swap from '../../pages/swapcoin/Swapcomp';
 import SendCoin from '../funds/Sendcoin';
+import TransactionHistory from '../history/History';
 
 function Profile() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -288,27 +289,8 @@ function Profile() {
           <div className="space-y-6">
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h2 className="text-xl font-bold mb-4">Recent Transactions</h2>
-              <div className="space-y-4">
-                {[
-                  { type: 'Buy', crypto: 'Bitcoin', amount: '0.05 BTC', value: '$2,341.23', date: '2024-03-15', status: 'Completed' },
-                  { type: 'Sell', crypto: 'Ethereum', amount: '1.5 ETH', value: '$4,562.10', date: '2024-03-14', status: 'Completed' },
-                  { type: 'Transfer', crypto: 'USDT', amount: '500 USDT', value: '$500.00', date: '2024-03-13', status: 'Pending' },
-                  { type: 'Swap', crypto: 'BTC to ETH', amount: '0.02 BTC', value: '$912.45', date: '2024-03-12', status: 'Completed' },
-                ].map((tx, index) => (
-                  <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                    <div>
-                      <div className="font-medium">{tx.type} {tx.crypto}</div>
-                      <div className="text-sm text-gray-500">{tx.date}</div>
-                    </div>
-                    <div className="text-right">
-                      <div>{tx.amount}</div>
-                      <div className={`text-sm ${tx.status === 'Completed' ? 'text-green-600' : 'text-orange-500'}`}>
-                        {tx.status}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <TransactionHistory/>
+             
             </div>
           </div>
         ); 
@@ -407,7 +389,7 @@ function Profile() {
                 </div>
               </div>
 
-              {/* 24h Change Card */}
+              {/* 24h Change Card */} 
               <div className="bg-white p-6 rounded-xl shadow-sm">
                 <h3 className="text-gray-500 text-sm">24h Change</h3>
                 <div className="mt-2 flex items-center">
