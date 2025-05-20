@@ -15,6 +15,7 @@ import Transfer from "./user-pannel/user-pages/Transfer";
 import Mybalance from "./user-pannel/balance/Mybalance";
 import History from "./user-pannel/history/History"; 
 import Profile from "./user-pannel/profile/Profile";
+import WalletOverview from './user-pannel/overview/WalletOverview';
 
 
 
@@ -38,6 +39,7 @@ const MainLayout = () => {
     "/transfer",
     "/mybalance",
     "/history",
+    "/wallet-overview",
   ];
 
   return (
@@ -61,6 +63,7 @@ const MainLayout = () => {
           <Route path="/mybalance" element={<Mybalance />} />
           <Route path="/history" element={<History />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/wallet-overview" element={<WalletOverview/>}/>
           
         </Routes>
       </div>

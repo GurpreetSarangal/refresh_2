@@ -177,20 +177,58 @@ const logout = async (req, res) => {
 
 
 // fetch data from database
+// const getUserProfile = async (req, res) => {
+//   try {
+//     const userId = req.user.id;
+//     const user = await User.findById(userId).select("-password");
+
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     // --- Fetch wallet data using `fetch` ---
+//     let walletData = {};
+//     try {
+//       if (user.walletAddress) {
+//         const response = await fetch(`https://api.getlock.io/wallet/${user.walletAddress}`);
+//         if (response.ok) {
+//           walletData = await response.json();
+//         } else {
+//           console.error("Wallet fetch failed with status:", response.status);
+//         }
+//       }
+//     } catch (walletErr) {
+//       console.error("Error fetching wallet data:", walletErr.message);
+//     }
+
+//     // --- Send user + wallet data ---
+//     res.status(200).json({
+//       user,
+//       wallet: walletData,
+//     });
+
+//   } catch (error) {
+//     console.error("Profile fetch error:", error.message);
+//     res.status(500).json({ message: "Server error while fetching profile" });
+//   }
+// };
+
 const getUserProfile = async (req, res) => {
   try {
     const userId = req.user.id;
     const user = await User.findById(userId).select("-password");
-
+    console.log("this runs");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // --- Fetch wallet data using `fetch` ---
     let walletData = {};
     try {
-      if (user.walletAddress) {
-        const response = await fetch(`https://api.getlock.io/wallet/${user.walletAddress}`);
+      // Access wallet address from accounts array
+      const walletAddress = user.accounts?.[0]?.wallet_address;
+
+      if (walletAddress) {
+        const response = await fetch(`https://api.getlock.io/wallet/${walletAddress}`);
         if (response.ok) {
           walletData = await response.json();
         } else {
@@ -201,7 +239,7 @@ const getUserProfile = async (req, res) => {
       console.error("Error fetching wallet data:", walletErr.message);
     }
 
-    // --- Send user + wallet data ---
+    // Send both user data and wallet data
     res.status(200).json({
       user,
       wallet: walletData,
@@ -212,7 +250,6 @@ const getUserProfile = async (req, res) => {
     res.status(500).json({ message: "Server error while fetching profile" });
   }
 };
-
 
 
 

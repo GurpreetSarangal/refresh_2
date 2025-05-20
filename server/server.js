@@ -12,8 +12,10 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(cors(corsOptions));
-app.use(cors());
-
+app.use(cors({
+  origin: "http://localhost:5173",  // allow frontend
+  credentials: true, // only if you're using cookies or sessions
+}));
 
 //this is in 2023 now in this version we dont need this
 //to store daat from front

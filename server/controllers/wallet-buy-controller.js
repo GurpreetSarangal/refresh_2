@@ -29,7 +29,12 @@ const getEthUsdPriceWithRetry = async (maxRetries = 3, delay = 1000) => {
 
 const buySepoliaETH = async (req, res) => {
   try {
-    const { amount, fiat_currency, crypto_currency, ethUsdAtInitiation } = req.body;
+    const { 
+      amount, 
+      fiat_currency, 
+      crypto_currency, 
+      ethUsdAtInitiation 
+    } = req.body;
     const userId = req.user.userId;
 
     if (!amount || !fiat_currency || !crypto_currency || !ethUsdAtInitiation) {

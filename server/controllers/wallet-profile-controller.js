@@ -3,7 +3,7 @@ const User = require("../models/user-model");
 const infoProvider = async (req, res) => {
   try {
     const userId = req.user.userId;
-    console.log("User ID received:", userId);
+    // console.log("User ID received:", userId);
 
     // Exclude password and nested private_key fields in accounts
     const user = await User.findById(userId)
@@ -13,7 +13,7 @@ const infoProvider = async (req, res) => {
       return res.status(404).json({ detail: "User not found" });
     }
 
-    console.log("User fetched:", user);
+    // console.log("User fetched:", user);
     res.status(200).json({
       user,
       message: "Protected profile data",

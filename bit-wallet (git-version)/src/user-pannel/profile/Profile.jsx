@@ -29,6 +29,7 @@ import SellCryptoForm from '../sell-component/Sellform';
 import Swap from '../../pages/swapcoin/Swapcomp';
 import SendCoin from '../funds/Sendcoin';
 import TransactionHistory from '../history/History';
+import WalletOverview from '../overview/walletoverview';
 
 function Profile() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -437,6 +438,7 @@ function Profile() {
                 </div>
               </div>
             </div>
+            {/* <WalletOverview/> */}
           </>
         );
     }
@@ -540,8 +542,7 @@ function Profile() {
         </main>
       </div>
 
-      {/* Profile Edit Modal */}
-      {/* {isProfileOpen && <ProfileEdit />} */}
+    
     </div>
   );
 }
