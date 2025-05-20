@@ -52,9 +52,9 @@ const BuyCryptoForm = () => {
     setResponse(null);
 
     try {
-      const token = localStorage.getItem("authToken"); // adjust based on your token storage
+      const token = localStorage.getItem("token"); // adjust based on your token storage
       const res = await axios.post(
-        "/api/wallet/buy",
+        "http://localhost:5000/api/wallet/buy",
         {
           amount: investmentAmount,
           fiat_currency: currency,
