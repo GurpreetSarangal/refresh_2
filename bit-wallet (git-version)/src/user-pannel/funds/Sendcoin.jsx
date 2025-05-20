@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 const SendCoin = () => {
   const [walletAddress, setWalletAddress] = useState('');
   const [balance, setBalance] = useState(null);
+  const [balanceWei, setBalanceWei] = useState(null);
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
   const [password, setPassword] = useState('');
@@ -23,7 +24,9 @@ const SendCoin = () => {
         console.log(data);
         // const ethBalance = parseFloat(data.result) / 1e18;
         const ethBalance = data.balance;
+
         setBalance(ethBalance);
+        setBalanceWei(data.balance_in_wei);
         setWalletAddress(data.walletAddress);
       } catch (error) {
         console.error('Error fetching wallet balance:', error);
@@ -66,7 +69,7 @@ const SendCoin = () => {
     <div className="send-coin">
       <h2>Send Coin</h2>
       <p><strong>Your Wallet Address:</strong> {walletAddress || 'Loading...'}</p>
-      <p><strong>Balance (ETH):</strong> {balance ?? 'Loading...'}</p>
+      <p><strong>Balance (WEI):</strong> {balanceWei ?? 'Loading...'}</p>
 
       <div>
         <label>Recipient Address:</label><br />

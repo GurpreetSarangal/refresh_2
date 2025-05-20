@@ -40,6 +40,13 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [amount, setAmount] = useState('');
+  const [message, setMessage] = useState('');
+  const [loading1, setLoading1] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('');
+
+
+
 
 
 
@@ -145,7 +152,38 @@ function Profile() {
     alert("Something went wrong. Please check your network and try again.");
   }
 };
+//add funds
+  const handleAddFunds = async (e) => {
+    e.preventDefault();
+    setLoading1(true);
+    setMessage('');
 
+    try {
+      const token = localStorage.getItem('token'); // Ensure your auth token is saved here
+
+      const response = await fetch('http://localhost:5000/api/wallet/add-funds', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ amount })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage(`✅ Success! New Balance: $${data.new_balance}`);
+        setAmount('');
+      } else {
+        setMessage(`❌ ${data.msg}`);
+      }
+    } catch (error) {
+      setMessage('❌ Server error while adding funds.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   const renderContent = () => {
@@ -156,34 +194,60 @@ function Profile() {
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h2 className="text-xl font-bold mb-6">Add Funds</h2>
               <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Amount (USD)
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-2 text-gray-500">$</span>
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      placeholder="0.00"
-                      className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                  </div>
+                <div className="max-w-md mx-auto space-y-4">
+                  <form onSubmit={handleAddFunds} className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Amount (USD)
+                      </label>
+                      <div className="relative">
+                        <span className="absolute left-3 top-2 text-gray-500">$</span>
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          placeholder="0.00"
+                          value={amount}
+                          onChange={(e) => setAmount(e.target.value)}
+                          required
+                          className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        />
+                      </div>
+                    </div>
+
+                    {/* New Payment Method Section */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Payment Method
+                      </label>
+                      <select
+                        value={paymentMethod}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                        required
+                        className="w-full py-2 px-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      >
+                        <option value="" disabled>
+                          Select a payment method
+                        </option>
+                        <option value="Paypal">Paypal</option>
+                        <option value="UPI">UPI</option>
+                      </select>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+                    >
+                      {loading ? 'Processing...' : 'Add Funds'}
+                    </button>
+                  </form>
+                  {message && (
+                    <p className={`font-semibold ${message.startsWith('✅') ? 'text-green-600' : 'text-red-600'}`}>
+                      {message}
+                    </p>
+                  )}
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Payment Method
-                  </label>
-                  <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <option value="card">Credit/Debit Card</option>
-                    <option value="bank">Bank Transfer</option>
-                    <option value="paypal">PayPal</option>
-                  </select>
-                </div>
-                <button className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors">
-                  Add Funds
-                </button>
               </div>
             </div>
           </div>

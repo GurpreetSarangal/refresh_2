@@ -32,5 +32,5 @@ router.post('/transfer', authMiddleware, transferCrypto);
 router.post('/update-setting', authMiddleware, profileProvider);
 
 
-module.exports = router;
+module.exports = router; 
  

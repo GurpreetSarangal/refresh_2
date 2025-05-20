@@ -28,6 +28,7 @@ const getWalletBalance = async (req, res) => {
       balance: balanceEth,
       unit: "ETH",
       network: "sepolia",
+      balance_in_wei: balanceWei.toString(),
     });
 
   } catch (error) {

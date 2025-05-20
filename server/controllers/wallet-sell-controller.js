@@ -29,7 +29,13 @@ const fetchExchangeRateWithRetry = async (maxRetries = 3, delay = 1000) => {
 };
 
 const sellCrypto = async (req, res) => {
-  const { amount, unit, crypto_currency, password, ethUsdAtInitiation } = req.body;
+  const { 
+    amount, 
+    unit, 
+    crypto_currency, 
+    password, 
+    ethUsdAtInitiation 
+  } = req.body;
 
   if (!amount || !unit || !crypto_currency || !password || !ethUsdAtInitiation) {
     return res.status(400).json({ message: "All fields including ethUsdAtInitiation are required" });
