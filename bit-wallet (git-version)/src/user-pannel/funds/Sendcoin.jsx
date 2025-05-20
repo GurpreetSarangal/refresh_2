@@ -92,3 +92,18 @@ const SendCoin = () => {
 };
 
 export default SendCoin;
+export async function getBalanceWei() {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch('http://localhost:5000/api/wallet/balance', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    return data.balance_in_wei;  // This is balanceWei
+  } catch (error) {
+    console.error('Error fetching wallet balance:', error);
+    return null;
+  }
+}
