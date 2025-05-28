@@ -30,15 +30,8 @@ const Carousel = () => {
 
   const fetchTrendingCoins = async () => {
     try {
-      const { data } = await axios.get(`/api/api/v3/coins/markets`, {
-        params: {
-          vs_currency: "INR",
-          order: "gecko_desc",
-          per_page: 10,
-          page: 1,
-          sparkline: false,
-          price_change_percentage: "24h",
-        },
+      const { data } = await axios.get(`http://localhost:5000/api/data/TrendingCoins`, {
+        
       });
   
       if (data && Array.isArray(data) && data.length > 0) {
