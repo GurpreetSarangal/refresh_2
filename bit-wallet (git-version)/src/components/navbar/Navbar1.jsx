@@ -14,17 +14,17 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 function NavList() {
   return (
     <List className=" p-0 lg:flex-row lg:p-1 text-black">
-      <Typography as="div" variant="body2" className="font-medium">
+      <Typography as="div" variant="h6" className="font-medium">
         <Link to="/" className="flex items-center gap-2 py-1 pr-4">
           <ListItem>Home</ListItem>
         </Link>
       </Typography>
-      <Typography as="div" variant="body2" className="font-medium">
+      <Typography as="div" variant="h6" className="font-medium">
         <Link to="/crypto" className="flex items-center gap-2 py-1 pr-4">
           <ListItem>Live Crypto</ListItem>
         </Link>
       </Typography>
-      <Typography as="div" variant="body2" className="font-medium">
+      <Typography as="div" variant="h6" className="font-medium">
         <Link to="/support" className="flex items-center gap-2 py-1 pr-4">
           <ListItem>Contact Us</ListItem>
         </Link>
