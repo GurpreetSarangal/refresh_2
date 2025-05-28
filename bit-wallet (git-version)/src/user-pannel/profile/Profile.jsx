@@ -30,6 +30,7 @@ import Swap from '../../pages/swapcoin/Swapcomp';
 import SendCoin from '../funds/Sendcoin';
 import TransactionHistory from '../history/History';
 import WalletOverview from '../overview/walletoverview';
+import WithdrawalFait from '../widthral/Withdrawal-fait';
 
 function Profile() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -255,41 +256,9 @@ function Profile() {
 
       case 'withdraw':
         return (
-          <div className="space-y-6">
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-xl font-bold mb-6">Withdraw Amount</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Amount (USD)
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-2 text-gray-500">$</span>
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      placeholder="0.00"
-                      className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Withdrawal Method
-                  </label>
-                  <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <option value="bank">Bank Account</option>
-                    <option value="paypal">PayPal</option>
-                    <option value="crypto">Crypto Wallet</option>
-                  </select>
-                </div>
-                <button className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors">
-                  Withdraw
-                </button>
-              </div>
-            </div>
-          </div>
+        <>
+        <WithdrawalFait/>
+        </>
         );
 
       case 'profile':

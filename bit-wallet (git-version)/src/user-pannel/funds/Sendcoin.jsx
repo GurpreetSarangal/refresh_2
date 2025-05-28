@@ -64,7 +64,7 @@ const SendCoin = () => {
       setStatus('Transaction failed. Please try again.');
     }
   };
-
+ 
   return (
    <div className="flex justify-center items-center min-h-screen  px-4">
   <div className="bg-white shadow-xl rounded-2xl p-6 w-full max-w-lg space-y-6">

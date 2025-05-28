@@ -1,169 +1,225 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Box, Button, Typography, MenuItem, Select, FormControl, InputLabel, TextField } from "@mui/material";
-import { CryptoState } from "../../CryptoContext";
 
 const SellCryptoForm = () => {
-  const { currency, symbol, userHoldings, setUserHoldings, walletBalance, setWalletBalance, addTransaction } = CryptoState();
-  const [selectedCoin, setSelectedCoin] = useState(""); 
-  const [coinData, setCoinData] = useState(null); 
-  const [profitLoss, setProfitLoss] = useState(null); 
-  const [paymentOption, setPaymentOption] = useState(""); 
-  const [sellQuantity, setSellQuantity] = useState(""); 
-  const [sellAmount, setSellAmount] = useState(0); 
-  const [error, setError] = useState(""); 
+  const [amount, setAmount] = useState("");
+  const [unit, setUnit] = useState("ether");
+  const [cryptoCurrency, setCryptoCurrency] = useState("Sepolia");
+  const [password, setPassword] = useState("");
+  const [ethUsdAtInitiation, setEthUsdAtInitiation] = useState(null);
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [txHash, setTxHash] = useState(null);
+  const [usdReceived, setUsdReceived] = useState(null);
+
+  // Fetch current ETH price on mount
   useEffect(() => {
-    if (Object.keys(userHoldings).length > 0) {
-      setSelectedCoin(Object.keys(userHoldings)[0]);
-    }
-  }, [userHoldings]);
-
-  const fetchCoinData = async () => {
-    if (!selectedCoin) return;
-    try {
-      const { data } = await axios.get(`https://api.coingecko.com/api/v3/coins/markets`, {
-        params: { vs_currency: currency, ids: selectedCoin },
-      });
-      setCoinData(data[0]);
-      const purchasePrice = userHoldings[selectedCoin]?.buyPrice;
-      if (purchasePrice) {
-        const priceChange = ((data[0].current_price - purchasePrice) / purchasePrice) * 100;
-        setProfitLoss(priceChange.toFixed(2)); 
+    const fetchEthPrice = async () => {
+      try {
+        const response = await axios.get(
+          "https://api.coingecko.com/api/v3/simple/price",
+          {
+            params: {
+              ids: "ethereum",
+              vs_currencies: "usd",
+            },
+          }
+        );
+        setEthUsdAtInitiation(response.data.ethereum.usd);
+      } catch (err) {
+        console.error("Failed to fetch ETH price:", err);
+        setError("Failed to load ETH price. Please try refreshing the page.");
       }
-    } catch (error) {
-      console.error("Error fetching coin data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchCoinData();
-  }, [selectedCoin, currency]);
-
-  const handleSellQuantityChange = (e) => {
-    const quantity = parseFloat(e.target.value);
-    setSellQuantity(quantity);
-
-    if (!selectedCoin || !coinData) {
-      setSellAmount(0);
-      return;
-    }
-
-    const availableQuantity = userHoldings[selectedCoin]?.quantity || 0;
-
-    if (quantity > availableQuantity) {
-      setError(`You only have ${availableQuantity} ${selectedCoin.toUpperCase()} available.`);
-      setSellAmount(0);
-    } else {
-      setError("");
-      setSellAmount((quantity * coinData.current_price).toFixed(2));
-    }
-  };
-
-  const handleSellCrypto = () => {
-    if (!selectedCoin || !sellQuantity || sellQuantity <= 0 || sellQuantity > (userHoldings[selectedCoin]?.quantity || 0)) {
-      alert("Invalid quantity!");
-      return;
-    }
-
-    setWalletBalance((prevBalance) => prevBalance + parseFloat(sellAmount));
-
-    setUserHoldings((prevHoldings) => {
-      const updatedHoldings = { ...prevHoldings };
-      if (updatedHoldings[selectedCoin].quantity - sellQuantity <= 0) {
-        delete updatedHoldings[selectedCoin];
-      } else {
-        updatedHoldings[selectedCoin].quantity -= sellQuantity;
-      }
-      return updatedHoldings;
-    });
-
-    // Add transaction to the history
-    const transaction = {
-      id: new Date().getTime(),
-      coin: selectedCoin,
-      quantity: sellQuantity,
-      price: coinData.current_price,
-      transactionType: "Sell",
-      date: new Date().toLocaleDateString(),
     };
-    addTransaction(transaction); // Adding the transaction to the history
+    fetchEthPrice();
+  }, []);
 
-    setSellQuantity("");
-    setSellAmount(0);
-    setPaymentOption("");
-    alert(`Successfully sold ${sellQuantity} ${selectedCoin.toUpperCase()} for ${symbol} ${sellAmount}`);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setError(null);
+    setTxHash(null);
+    setUsdReceived(null);
+
+    if (!amount || !unit || !cryptoCurrency || !password || !ethUsdAtInitiation) {
+      setError("Please fill all fields and ensure ETH price is loaded.");
+      return;
+    }
+
+    if (cryptoCurrency.toLowerCase() !== "sepolia") {
+      setError("Only Sepolia ETH is supported.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("You must be logged in to perform this transaction.");
+        setLoading(false);
+        return;
+      }
+
+      // API call to backend sellCrypto endpoint
+      const res = await axios.post(
+        "http://localhost:5000/api/wallet/sellCrypto",
+        {
+          amount,
+          unit,
+          crypto_currency: cryptoCurrency,
+          password,
+          ethUsdAtInitiation,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setTxHash(res.data.txHash);
+      setUsdReceived(res.data.usdReceived);
+    } catch (err) {
+      console.error("Sell crypto error:", err);
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message);
+      } else if (err.message) {
+        setError(err.message);
+      } else {
+        setError("An unexpected error occurred.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <Box sx={{ padding: "20px", maxWidth: "600px", margin: "auto", borderRadius: "8px" }}>
-      <Typography variant="h4" sx={{ color: "black", marginBottom: "20px" }}>
-        Sell Cryptocurrency
-      </Typography>
+    <div style={{ maxWidth: 400, margin: "auto", padding: 20, fontFamily: "Arial, sans-serif" }}>
+      <h2>Sell Sepolia ETH</h2>
 
-      <FormControl fullWidth sx={{ marginBottom: "20px" }}>
-        <InputLabel>Select Coin</InputLabel>
-        <Select value={selectedCoin} onChange={(e) => setSelectedCoin(e.target.value)} label="Select Coin">
-          {Object.keys(userHoldings).length > 0 ? (
-            Object.keys(userHoldings).map((coin) => (
-              <MenuItem key={coin} value={coin}>
-                {userHoldings[coin]?.name || coin.toUpperCase()} ({coin.toUpperCase()})
-              </MenuItem>
-            ))
-          ) : (
-            <MenuItem disabled>No Coins Available</MenuItem>
-          )}
-        </Select>
-      </FormControl>
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: 15 }}>
+          <label>
+            Amount:
+            <input
+              type="number"
+              min="0"
+              step="any"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              required
+              style={{ marginLeft: 10, padding: 5, width: "70%" }}
+            />
+          </label>
+        </div>
 
-      {coinData && (
-        <Typography variant="h6" sx={{ color: "black", marginBottom: "10px" }}>
-          Current Price: {symbol} {coinData.current_price.toFixed(2)}
-        </Typography>
+        <div style={{ marginBottom: 15 }}>
+          <label>
+            Unit:
+            <select
+              value={unit}
+              onChange={(e) => setUnit(e.target.value)}
+              style={{ marginLeft: 10, padding: 5 }}
+            >
+              <option value="wei">wei</option>
+              <option value="gwei">gwei</option>
+              <option value="ether">ether</option>
+            </select>
+          </label>
+        </div>
+
+        <div style={{ marginBottom: 15 }}>
+          <label>
+            Crypto Currency:
+            <input
+              type="text"
+              value={cryptoCurrency}
+              readOnly
+              style={{
+                marginLeft: 10,
+                padding: 5,
+                backgroundColor: "#eee",
+                cursor: "not-allowed",
+                width: "70%",
+              }}
+            />
+          </label>
+          <small>Only Sepolia ETH supported</small>
+        </div>
+
+        <div style={{ marginBottom: 15 }}>
+          <label>
+            Password (to decrypt private key):
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              style={{ marginLeft: 10, padding: 5, width: "70%" }}
+            />
+          </label>
+        </div>
+
+        <div style={{ marginBottom: 15 }}>
+          <label>
+            ETH Price at Initiation (USD):
+            <input
+              type="number"
+              step="0.01"
+              value={ethUsdAtInitiation ?? ""}
+              readOnly
+              style={{
+                marginLeft: 10,
+                padding: 5,
+                backgroundColor: "#eee",
+                cursor: "not-allowed",
+                width: "70%",
+              }}
+            />
+          </label>
+          <small>Fetched from CoinGecko on page load</small>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading || ethUsdAtInitiation === null}
+          style={{
+            padding: "10px 20px",
+            backgroundColor: loading ? "#ccc" : "#4caf50",
+            color: "white",
+            border: "none",
+            cursor: loading ? "not-allowed" : "pointer",
+          }}
+        >
+          {loading ? "Processing..." : "Sell Crypto"}
+        </button>
+      </form>
+
+      {error && (
+        <div style={{ color: "red", marginTop: 15 }}>
+          <strong>Error:</strong> {error}
+        </div>
       )}
 
-      {profitLoss !== null && (
-        <Typography variant="h6" sx={{ color: profitLoss >= 0 ? "green" : "red", marginBottom: "20px" }}>
-          {profitLoss >= 0 ? "Profit" : "Loss"}: {profitLoss}%
-        </Typography>
+      {txHash && (
+        <div style={{ marginTop: 15, color: "green" }}>
+          <p>Transaction successful!</p>
+          <p>
+            Tx Hash:{" "}
+            <a
+              href={`https://sepolia.etherscan.io/tx/${txHash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {txHash}
+            </a>
+          </p>
+          <p>USD Received: ${usdReceived}</p>
+        </div>
       )}
-
-      <TextField
-        fullWidth
-        label="Quantity to Sell"
-        type="number"
-        value={sellQuantity}
-        onChange={handleSellQuantityChange}
-        sx={{ marginBottom: "10px" }}
-        inputProps={{ min: 0, max: userHoldings[selectedCoin]?.quantity || 0 }}
-      />
-
-      {error && <Typography sx={{ color: "red", marginBottom: "10px" }}>{error}</Typography>}
-
-      {sellAmount > 0 && (
-        <Typography variant="h6" sx={{ color: "black", marginBottom: "20px" }}>
-          Amount You Will Receive: {symbol} {sellAmount}
-        </Typography>
-      )}
-
-      <FormControl fullWidth sx={{ marginBottom: "20px" }}>
-        <InputLabel>Receive Payment</InputLabel>
-        <Select value={paymentOption} onChange={(e) => setPaymentOption(e.target.value)} label="Receive Payment">
-          <MenuItem value="bit_wallet">Bit Wallet</MenuItem>
-          <MenuItem value="upi">UPI</MenuItem>
-        </Select>
-      </FormControl>
-
-      <Button
-        variant="contained"
-        color="primary"
-        fullWidth
-        onClick={handleSellCrypto}
-        disabled={!selectedCoin || !paymentOption || sellQuantity <= 0 || sellQuantity > (userHoldings[selectedCoin]?.quantity || 0)}
-      >
-        Sell {selectedCoin ? selectedCoin.toUpperCase() : "Coin"}
-      </Button>
-    </Box>
+    </div>
   );
 };
 

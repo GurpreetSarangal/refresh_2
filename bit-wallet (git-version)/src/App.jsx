@@ -56,14 +56,14 @@ const MainLayout = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/coins/:id" element={<CoinPage />} />
           <Route path="/user-pannel" element={<UserPanel />} />
-          <Route path="/buy" element={<BuyCryptoForm />} />
+          {/* <Route path="/buy" element={<BuyCryptoForm />} />
           <Route path="/sell" element={<Sell />} />
           <Route path="/swap" element={<Swap />} />
           <Route path="/transfer" element={<Transfer />} />
           <Route path="/mybalance" element={<Mybalance />} />
           <Route path="/history" element={<History />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/wallet-overview" element={<WalletOverview/>}/>
+          <Route path="/wallet-overview" element={<WalletOverview/>}/> */}
           
         </Routes>
       </div>
