@@ -13,23 +13,16 @@ const SellCryptoForm = () => {
   const [txHash, setTxHash] = useState(null);
   const [usdReceived, setUsdReceived] = useState(null);
 
-  // Fetch current ETH price on mount
   useEffect(() => {
     const fetchEthPrice = async () => {
       try {
-        const response = await axios.get(
-          "https://api.coingecko.com/api/v3/simple/price",
-          {
-            params: {
-              ids: "ethereum",
-              vs_currencies: "usd",
-            },
-          }
-        );
+        const response = await axios.get("https://api.coingecko.com/api/v3/simple/price", {
+          params: { ids: "ethereum", vs_currencies: "usd" },
+        });
         setEthUsdAtInitiation(response.data.ethereum.usd);
       } catch (err) {
         console.error("Failed to fetch ETH price:", err);
-        setError("Failed to load ETH price. Please try refreshing the page.");
+        setError("Failed to load ETH price. Please try refreshing.");
       }
     };
     fetchEthPrice();
@@ -37,7 +30,6 @@ const SellCryptoForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setError(null);
     setTxHash(null);
     setUsdReceived(null);
@@ -62,165 +54,168 @@ const SellCryptoForm = () => {
         return;
       }
 
-      // API call to backend sellCrypto endpoint
       const res = await axios.post(
         "http://localhost:5000/api/wallet/sell",
-        {
-          amount,
-          unit,
-          crypto_currency: cryptoCurrency,
-          password,
-          ethUsdAtInitiation,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { amount, unit, crypto_currency: cryptoCurrency, password, ethUsdAtInitiation },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      setTxHash(res.data.txHash);
-      setUsdReceived(res.data.usdReceived);
+      if (res && res.data) {
+        setTxHash(res.data.txHash || "");
+        setUsdReceived(res.data.usdReceived || 0);
+      } else {
+        setError("Unexpected server response.");
+      }
     } catch (err) {
       console.error("Sell crypto error:", err);
-      if (err.response && err.response.data && err.response.data.message) {
-        setError(err.response.data.message);
-      } else if (err.message) {
-        setError(err.message);
-      } else {
-        setError("An unexpected error occurred.");
-      }
+      setError(err?.response?.data?.message || err.message || "An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: "auto", padding: 20, fontFamily: "Arial, sans-serif" }}>
-      <h2>Sell Sepolia ETH</h2>
+    <div style={styles.container}>
+      <h2 style={styles.heading}>Sell Sepolia ETH</h2>
 
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: 15 }}>
-          <label>
-            Amount:
-            <input
-              type="number"
-              min="0"
-              step="any"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              required
-              style={{ marginLeft: 10, padding: 5, width: "70%" }}
-            />
-          </label>
-        </div>
+      <form onSubmit={handleSubmit} style={styles.form}>
+        <FormField label="Amount" type="number" value={amount} onChange={setAmount} required />
+        <SelectField label="Unit" value={unit} onChange={setUnit} options={["wei", "gwei", "ether"]} />
+        <FormField label="Crypto Currency" value={cryptoCurrency} readOnly note="Only Sepolia ETH supported" />
+        <FormField label="Password (decrypt key)" type="password" value={password} onChange={setPassword} required />
+        <FormField
+          label="ETH Price (USD)"
+          type="number"
+          value={ethUsdAtInitiation ?? ""}
+          readOnly
+          note="Fetched from CoinGecko"
+        />
 
-        <div style={{ marginBottom: 15 }}>
-          <label>
-            Unit:
-            <select
-              value={unit}
-              onChange={(e) => setUnit(e.target.value)}
-              style={{ marginLeft: 10, padding: 5 }}
-            >
-              <option value="wei">wei</option>
-              <option value="gwei">gwei</option>
-              <option value="ether">ether</option>
-            </select>
-          </label>
-        </div>
-
-        <div style={{ marginBottom: 15 }}>
-          <label>
-            Crypto Currency:
-            <input
-              type="text"
-              value={cryptoCurrency}
-              readOnly
-              style={{
-                marginLeft: 10,
-                padding: 5,
-                backgroundColor: "#eee",
-                cursor: "not-allowed",
-                width: "70%",
-              }}
-            />
-          </label>
-          <small>Only Sepolia ETH supported</small>
-        </div>
-
-        <div style={{ marginBottom: 15 }}>
-          <label>
-            Password (to decrypt private key):
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              style={{ marginLeft: 10, padding: 5, width: "70%" }}
-            />
-          </label>
-        </div>
-
-        <div style={{ marginBottom: 15 }}>
-          <label>
-            ETH Price at Initiation (USD):
-            <input
-              type="number"
-              step="0.01"
-              value={ethUsdAtInitiation ?? ""}
-              readOnly
-              style={{
-                marginLeft: 10,
-                padding: 5,
-                backgroundColor: "#eee",
-                cursor: "not-allowed",
-                width: "70%",
-              }}
-            />
-          </label>
-          <small>Fetched from CoinGecko on page load</small>
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading || ethUsdAtInitiation === null}
-          style={{
-            padding: "10px 20px",
-            backgroundColor: loading ? "#ccc" : "#4caf50",
-            color: "white",
-            border: "none",
-            cursor: loading ? "not-allowed" : "pointer",
-          }}
-        >
+        <button type="submit" disabled={loading || ethUsdAtInitiation === null} style={styles.button(loading)}>
           {loading ? "Processing..." : "Sell Crypto"}
         </button>
       </form>
 
-      {error && (
-        <div style={{ color: "red", marginTop: 15 }}>
-          <strong>Error:</strong> {error}
-        </div>
-      )}
-
+      {error && <p style={styles.error}>⚠ {error}</p>}
       {txHash && (
-        <div style={{ marginTop: 15, color: "green" }}>
-          <p>Transaction successful!</p>
+        <div style={styles.success}>
+          <p>✅ Transaction successful!</p>
           <p>
             Tx Hash:{" "}
-            <a
-              href={`https://sepolia.etherscan.io/tx/${txHash}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={`https://sepolia.etherscan.io/tx/${txHash}`} target="_blank" rel="noopener noreferrer">
               {txHash}
             </a>
           </p>
-          <p>USD Received: ${usdReceived}</p>
+          <p>USD Received: <strong>${usdReceived}</strong></p>
         </div>
       )}
     </div>
   );
+};
+
+// ========== Reusable Subcomponents ==========
+
+const FormField = ({ label, type = "text", value, onChange, required = false, readOnly = false, note }) => (
+  <div style={styles.field}>
+    <label style={styles.label}>{label}</label>
+    <input
+      type={type}
+      value={value}
+      required={required}
+      readOnly={readOnly}
+      onChange={onChange ? (e) => onChange(e.target.value) : undefined}
+      style={{ ...styles.input, backgroundColor: readOnly ? "#f3f4f6" : "white", cursor: readOnly ? "not-allowed" : "text" }}
+    />
+    {note && <small style={styles.note}>{note}</small>}
+  </div>
+);
+
+const SelectField = ({ label, value, onChange, options }) => (
+  <div style={styles.field}>
+    <label style={styles.label}>{label}</label>
+    <select value={value} onChange={(e) => onChange(e.target.value)} style={styles.select}>
+      {options.map((opt) => (
+        <option value={opt} key={opt}>{opt}</option>
+      ))}
+    </select>
+  </div>
+);
+
+// ========== Styles ==========
+
+const styles = {
+  container: {
+    maxWidth: 480,
+    margin: "auto",
+    padding: 24,
+    fontFamily: "'Segoe UI', sans-serif",
+    backgroundColor: "#ffffff",
+    borderRadius: 12,
+    boxShadow: "0 0 10px rgba(0,0,0,0.05)",
+  },
+  heading: {
+    fontSize: "1.6rem",
+    fontWeight: "600",
+    marginBottom: 24,
+    textAlign: "center",
+    color: "#333",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 16,
+  },
+  field: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  label: {
+    fontSize: "0.95rem",
+    marginBottom: 4,
+    color: "#222",
+  },
+  input: {
+    padding: "10px 12px",
+    borderRadius: 6,
+    border: "1px solid #ccc",
+    fontSize: "1rem",
+  },
+  select: {
+    padding: "10px 12px",
+    borderRadius: 6,
+    border: "1px solid #ccc",
+    fontSize: "1rem",
+  },
+  note: {
+    fontSize: "0.8rem",
+    color: "#666",
+    marginTop: 4,
+  },
+  button: (loading) => ({
+    padding: "12px",
+    fontSize: "1rem",
+    fontWeight: "600",
+    backgroundColor: loading ? "#ccc" : "#2563eb",
+    color: "white",
+    border: "none",
+    borderRadius: 6,
+    cursor: loading ? "not-allowed" : "pointer",
+    transition: "0.3s",
+  }),
+  error: {
+    marginTop: 20,
+    color: "#dc2626",
+    backgroundColor: "#fee2e2",
+    padding: 10,
+    borderRadius: 6,
+  },
+  success: {
+    marginTop: 20,
+    color: "#16a34a",
+    backgroundColor: "#dcfce7",
+    padding: 12,
+    borderRadius: 6,
+  },
 };
 
 export default SellCryptoForm;
