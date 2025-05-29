@@ -64,7 +64,7 @@ const SellCryptoForm = () => {
 
       // API call to backend sellCrypto endpoint
       const res = await axios.post(
-        "http://localhost:5000/api/wallet/sellCrypto",
+        "http://localhost:5000/api/wallet/sell",
         {
           amount,
           unit,
