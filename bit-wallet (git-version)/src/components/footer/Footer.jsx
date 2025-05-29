@@ -26,8 +26,8 @@ const Footer = () => {
   
             <div className="footer-section">
               <h3 className='text-[#00d084]'>Contact</h3>
-              <p>Email: support@cryptoexchange.com</p>
-              <p>Phone: +012 345 67890</p>
+              <p>Email: wecodedragons@gmail.com</p>
+              <p>Phone: +91 8284924116</p>
               <div className="social-icons">
                 <a href="#"><i className="fab fa-facebook"></i></a>
                 <a href="#"><i className="fab fa-twitter"></i></a>
@@ -38,7 +38,7 @@ const Footer = () => {
           </div>
   
           <div className="footer-bottom">
-            <p>&copy; 2025 CryptoExchange. All rights reserved.</p>
+            <p>Made with ❤ by @WeCodeDragons</p>
           </div>
         </footer>
       </div>

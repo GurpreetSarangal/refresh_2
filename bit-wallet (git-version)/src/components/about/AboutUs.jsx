@@ -141,7 +141,7 @@ const AboutUs = () => {
                   </div>
                 </div>
                 <div className="col-sm-6">
-                  <a href="#" className="btn btn-primary rounded-pill py-3 px-5 flex-shrink-0">
+                  <a href="/support" className="btn btn-primary rounded-pill py-3 px-5 flex-shrink-0">
                     Discover Now
                   </a>
                 </div>
@@ -151,7 +151,7 @@ const AboutUs = () => {
                     <div>
                       <h4>Contact Us</h4>
                       <p className="mb-0 fs-5" style={{ letterSpacing: "1px" }}>
-                        +01234567890
+                        +91 8284924116
                       </p>
                     </div>
                   </div>

@@ -10,13 +10,13 @@ const Topbar = () => {
           <div className="col-md-8 text-center text-lg-start mb-2 d-none d-md-block">
             <div className="d-flex flex-wrap">
               <Link to="/location" className="text-muted small me-4">
-                <i className="fas fa-map-marker-alt text-primary me-2"></i>Find A Location
+                <i className="fas fa-map-marker-alt text-primary me-2"></i>GNDU, AMRITSAR
               </Link>
               <a href="tel:+01234567890" className="text-muted small me-4">
-                <i className="fas fa-phone-alt text-primary me-2"></i>+01234567890
+                <i className="fas fa-phone-alt text-primary me-2"></i>+91 8284924116
               </a>
               <a href="mailto:example@gmail.com" className="text-muted small me-0">
-                <i className="fas fa-envelope text-primary me-2"></i>Example@gmail.com
+                <i className="fas fa-envelope text-primary me-2"></i>wecodedragons@gmail.com
               </a>
             </div>
           </div>
