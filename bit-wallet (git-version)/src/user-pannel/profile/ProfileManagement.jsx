@@ -1,125 +1,156 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { CameraIcon } from "@heroicons/react/24/solid";
-import logo from "../../assets/image.png";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const ProfileManagement = () => {
+function ProfileManagement() {
   const navigate = useNavigate();
-
-  const [user, setUser] = useState(() => {
-    const storedUser = JSON.parse(localStorage.getItem("userProfile"));
-    return (
-      storedUser || {
-        name: "John Doe",
-        email: "johndoe@example.com",
-        phone: "+1234567890",
-        password: "",
-        profilePic: logo,
-      }
-    );
+  const [user, setUser] = useState({
+    email: "",
+    phone: "",
+    username: "",
   });
 
-  const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
-  };
+  const [passwords, setPasswords] = useState({
+    current: "",
+    newPass: "",
+    confirmPass: "",
+  });
 
-  const handleProfilePicChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setUser({ ...user, profilePic: event.target.result });
-      };
-      reader.readAsDataURL(file);
+  const [message, setMessage] = useState("");
+
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get("/api/wallet/settings", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser({
+          email: res.data.user.email,
+          phone: res.data.user.phone || "",
+          username: res.data.user.username || "",
+        });
+      } catch (err) {
+        console.error("❌ Failed to fetch profile", err);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  const isStrongPassword = (pass) =>
+    pass.length >= 8 &&
+    /[A-Z]/.test(pass) &&
+    /[0-9]/.test(pass) &&
+    /[^A-Za-z0-9]/.test(pass);
+
+  const handleSaveChanges = async () => {
+    try {
+      const res = await axios.post(
+        "/api/wallet/update-setting",
+        {
+          email: user.email,
+          phone: user.phone,
+          username: user.username,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setMessage("✅ Profile updated successfully.");
+    } catch (err) {
+      console.error("❌ Update failed", err);
+      setMessage("❌ Failed to update profile.");
     }
   };
 
-  const handleSave = () => {
-    localStorage.setItem("userProfile", JSON.stringify(user));
-    alert("Profile Updated Successfully!");
+  const handleChangePassword = async () => {
+    const { current, newPass, confirmPass } = passwords;
 
-    // Navigate to Profile Page
-    navigate("/profile");
+    if (!current || !newPass || !confirmPass) {
+      return setMessage("❌ All password fields are required.");
+    }
+
+    if (newPass !== confirmPass) {
+      return setMessage("❌ New passwords do not match.");
+    }
+
+    if (!isStrongPassword(newPass)) {
+      return setMessage("❌ Password must be 8+ chars, with uppercase, number, special char.");
+    }
+
+    try {
+      const res = await axios.post(
+        "/api/wallet/update-setting",
+        { currentPassword: current, newPassword: newPass },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (res.data.forceLogout) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+      setMessage("✅ Password updated. Please log in again.");
+    } catch (err) {
+      console.error("❌ Password update error", err);
+      setMessage("❌ Password update failed.");
+    }
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex justify-center items-center">
-      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg">
-        <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">
-          Profile Management
-        </h2>
+    <div className="settings-container">
+      <h2>⚙️ Profile Settings</h2>
 
-        {/* Profile Picture Upload */}
-        <div className="relative w-28 h-28 mx-auto mb-4">
-          <img
-            src={user.profilePic}
-            alt="Profile"
-            className="w-full h-full object-cover rounded-full border border-gray-300"
-          />
-          <label className="absolute bottom-1 right-1 bg-[#00d084] p-2 rounded-full cursor-pointer">
-            <CameraIcon className="h-5 w-5 text-white" />
-            <input
-              type="file"
-              className="hidden"
-              accept="image/*"
-              onChange={handleProfilePicChange}
-            />
-          </label>
-        </div>
-
-        {/* User Information Form */}
-        <div className="space-y-4">
-          <div>
-            <label className="text-gray-700 font-medium">Full Name</label>
-            <input
-              type="text"
-              name="name"
-              value={user.name}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-[#00d084]"
-            />
-          </div>
-
-          <div>
-            <label className="text-gray-700 font-medium">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={user.email}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-[#00d084]"
-            />
-          </div>
-
-          <div>
-            <label className="text-gray-700 font-medium">Phone</label>
-            <input
-              type="tel"
-              name="phone"
-              value={user.phone}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-[#00d084]"
-            />
-          </div>
-
-          {/* Save Button */}
-          <button
-            onClick={handleSave}
-            className="w-full bg-[#00d084] text-white py-2 rounded-lg font-semibold hover:bg-green-600 transition duration-200"
-          >
-            Save Changes
-          </button>
-        </div>
-
-        {/* Back to Dashboard Link */}
-        <div className="text-center mt-4">
-          <Link to="/user-pannel" className="text-[#00d084] hover:underline">
-            Back to Dashboard
-          </Link>
-        </div>
+      <div>
+        <label>Email:</label>
+        <input
+          value={user.email}
+          onChange={(e) => setUser({ ...user, email: e.target.value })}
+        />
       </div>
+      <div>
+        <label>Phone:</label>
+        <input
+          value={user.phone}
+          onChange={(e) => setUser({ ...user, phone: e.target.value })}
+        />
+      </div>
+      <div>
+        <label>Username:</label>
+        <input
+          value={user.username}
+          onChange={(e) => setUser({ ...user, username: e.target.value })}
+        />
+      </div>
+      <button onClick={handleSaveChanges}>💾 Save Profile</button>
+
+      <h3>🔐 Change Password</h3>
+      <div>
+        <label>Current Password:</label>
+        <input
+          type="password"
+          value={passwords.current}
+          onChange={(e) => setPasswords({ ...passwords, current: e.target.value })}
+        />
+      </div>
+      <div>
+        <label>New Password:</label>
+        <input
+          type="password"
+          value={passwords.newPass}
+          onChange={(e) => setPasswords({ ...passwords, newPass: e.target.value })}
+        />
+      </div>
+      <div>
+        <label>Confirm New Password:</label>
+        <input
+          type="password"
+          value={passwords.confirmPass}
+          onChange={(e) => setPasswords({ ...passwords, confirmPass: e.target.value })}
+        />
+      </div>
+      <button onClick={handleChangePassword}>🔁 Change Password</button>
+
+      {message && <p>{message}</p>}
     </div>
   );
-};
+}
 
 export default ProfileManagement;

@@ -31,6 +31,7 @@ import SendCoin from '../funds/Sendcoin';
 import TransactionHistory from '../history/History';
 import WalletOverview from '../overview/walletoverview';
 import WithdrawalFait from '../widthral/Withdrawal-fait';
+import ProfileManagement from './ProfileManagement';
 
 function Profile() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -46,7 +47,7 @@ function Profile() {
   const [loading1, setLoading1] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('');
 
-
+ 
 
 
 
@@ -405,7 +406,10 @@ function Profile() {
          </>);
       
       case 'settings':
-        return (<></>);
+        return (<>
+        <ProfileManagement/>
+        
+        </>);
 
       default:
         return (
