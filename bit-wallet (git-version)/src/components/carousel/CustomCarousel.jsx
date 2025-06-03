@@ -4,6 +4,8 @@ import img1 from '../../assets/img/carousel-1.jpg';
 import img2 from '../../assets/img/carousel-2.jpg';
 import "./Carousel.css";
 import { Backdrop } from "@mui/material";
+import { Link } from "react-router-dom";
+
 
 
 const CustomCarousel = () => {
@@ -40,8 +42,9 @@ const CustomCarousel = () => {
                 <Button variant="light" className="rounded-pill py-3 px-4 me-2">
                   <i className="fas fa-play-circle me-2"></i> Watch Video
                 </Button>
-                <Button variant="primary" className="rounded-pill py-3 px-4 ms-2">
-                  Learn More
+                <Button variant="primary" className="rounded-pill py-3 px-4 ms-2"><Link to="/usermanual" className="text-white">
+                  Manual
+                </Link>
                 </Button>
               </div>
             </div>
@@ -77,8 +80,9 @@ const CustomCarousel = () => {
                 <Button variant="light" className="rounded-pill py-3 px-4 me-2">
                   <i className="fas fa-play-circle me-2"></i> Watch Video
                 </Button>
-                <Button variant="primary" className="rounded-pill py-3 px-4 ms-2">
-                  Learn More
+                <Button variant="primary" className="rounded-pill py-3 px-4 ms-2"><Link to="/usermanual" className="text-white">
+                  Manual
+                </Link>
                 </Button>
               </div>
             </div>

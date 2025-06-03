@@ -16,6 +16,8 @@ import Mybalance from "./user-pannel/balance/Mybalance";
 import History from "./user-pannel/history/History"; 
 import Profile from "./user-pannel/profile/Profile";
 import WalletOverview from './user-pannel/overview/WalletOverview';
+import UserManual from './components/user-mannual/UserManual';
+
 
 
 
@@ -56,6 +58,8 @@ const MainLayout = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/coins/:id" element={<CoinPage />} />
           <Route path="/user-pannel" element={<UserPanel />} />
+          <Route path="/usermanual" element={<UserManual />} />
+
           {/* <Route path="/buy" element={<BuyCryptoForm />} />
           <Route path="/sell" element={<Sell />} />
           <Route path="/swap" element={<Swap />} />
