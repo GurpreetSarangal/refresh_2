@@ -23,12 +23,12 @@ function ProfileManagement() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get("/api/wallet/settings", {
+        const res = await axios.get("http://localhost:5000/api/wallet/settings", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser({
           email: res.data.user.email,
-          phone: res.data.user.phone || "",
+          phone: res.data.user.phone_number || "",
           username: res.data.user.username || "",
         });
       } catch (err) {
@@ -47,7 +47,7 @@ function ProfileManagement() {
   const handleSaveChanges = async () => {
     try {
       const res = await axios.post(
-        "/api/wallet/update-setting",
+        "http://localhost:5000/api/wallet/update-settings",
         {
           email: user.email,
           phone: user.phone,
@@ -55,7 +55,9 @@ function ProfileManagement() {
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setMessage("✅ Profile updated successfully.");
+      
+      setMessage(res.data.message);
+      
     } catch (err) {
       console.error("❌ Update failed", err);
       setMessage("❌ Failed to update profile.");
@@ -79,7 +81,7 @@ function ProfileManagement() {
 
     try {
       const res = await axios.post(
-        "/api/wallet/update-setting",
+        "http://localhost:5000/api/auth/update-password",
         { currentPassword: current, newPassword: newPass },
         { headers: { Authorization: `Bearer ${token}` } }
       );
