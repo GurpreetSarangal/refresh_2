@@ -10,6 +10,7 @@ const transferCrypto = require('../controllers/wallet-transfer-controller');
 const sellCrypto = require('../controllers/wallet-sell-controller');
 const getRecentTransactions = require('../controllers/wallet-recent-controller');
 const getPortfolio = require('../controllers/wallet-overview-controller');
+const updateUserSettings = require('../controllers/wallet-update-settings-controller');
 
 
 
@@ -29,7 +30,8 @@ router.post('/buy', authMiddleware, buySepoliaETH);
 router.post('/sell', authMiddleware, sellCrypto);
 // router.post('/swap', authMiddleware, profileProvider);
 router.post('/transfer', authMiddleware, transferCrypto);
-router.post('/update-setting', authMiddleware, profileProvider);
+router.post('/update-settings', authMiddleware, updateUserSettings);
+router.post('/update-password', authMiddleware, updateUserSettings);
 
 
 module.exports = router; 

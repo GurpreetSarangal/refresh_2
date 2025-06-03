@@ -1,4 +1,8 @@
 const User = require("../models/user-model");
+const { ethers } = require("ethers");
+
+const SEPOLIA_RPC_URL = process.env.SEPOLIA_RPC_URL;
+const provider = new ethers.JsonRpcProvider(SEPOLIA_RPC_URL);
 
 const infoProvider = async (req, res) => {
   try {
@@ -13,9 +17,27 @@ const infoProvider = async (req, res) => {
       return res.status(404).json({ detail: "User not found" });
     }
 
+    const walletAddress = user.accounts[0].wallet_address;
+
+    if (!walletAddress) {
+      return res.status(404).json({ msg: "Wallet address not set" });
+    }
+
+    const balanceWei = await provider.getBalance(walletAddress);
+    const balanceEth = ethers.formatEther(balanceWei);
+
+    // return res.status(200).json();
+
     // console.log("User fetched:", user);
     res.status(200).json({
       user,
+      wallet: {
+        walletAddress,
+        balance: balanceEth,
+        unit: "ETH",
+        network: "sepolia",
+        balance_in_wei: balanceWei.toString(),
+      },
       message: "Protected profile data",
     });
   } catch (error) {

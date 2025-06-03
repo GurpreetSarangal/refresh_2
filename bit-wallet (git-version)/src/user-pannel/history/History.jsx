@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 
 const TransactionHistory = () => {
-  const [transactions, setTransactions] = useState([]);
+  const [transactions, setTransactions] = useState(null);
   const [walletAddress, setWalletAddress] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

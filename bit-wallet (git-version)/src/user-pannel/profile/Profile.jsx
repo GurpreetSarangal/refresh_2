@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 
-import { 
-  Wallet, 
-  LineChart, 
+import {
+  Wallet,
+  LineChart,
   CirclePower,
-  Settings, 
-  Bell, 
-  ArrowUpRight, 
+  Settings,
+  Bell,
+  ArrowUpRight,
   ArrowDownRight,
   Menu,
   X,
@@ -47,12 +47,12 @@ function Profile() {
   const [loading1, setLoading1] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('');
 
- 
 
 
 
 
-   const [profileData, setProfileData] = useState({
+
+  const [profileData, setProfileData] = useState({
     name: '',
     email: '',
     phone: '',
@@ -85,6 +85,9 @@ function Profile() {
         const data = await res.json();
         setUser(data.user);
         setWallet(data.wallet);
+        console.log("askfjaskjfsakj");
+        console.log(wallet);
+        console.log(user);
         setLoading(false);
       } catch (err) {
         setError(err.message || "Something went wrong");
@@ -93,7 +96,7 @@ function Profile() {
     };
 
     fetchProfile();
-  }, []);
+  }, [activeTab]);
 
   if (loading) return <p>Loading profile...</p>;
   if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
@@ -121,40 +124,40 @@ function Profile() {
   const LOGOUT_URL = "http://localhost:5000/api/auth/logout";
 
   const handleLogout = async (e) => {
-  e.preventDefault();
-  try {
-    const token = localStorage.getItem("token");
-    const response = await fetch(LOGOUT_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      },
-      body: JSON.stringify({ email: profileData.email }) // if needed
-    });
-
-    let responseData;
+    e.preventDefault();
     try {
-      responseData = await response.json();
-    } catch (err) {
-      // If JSON parsing fails, just fallback to text (likely an HTML error page)
-      const text = await response.text();
-      console.error("Non-JSON response:", text);
-      throw new Error("Logout failed due to server error");
-    }
+      const token = localStorage.getItem("token");
+      const response = await fetch(LOGOUT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ email: profileData.email }) // if needed
+      });
 
-    if (response.ok) {
-      localStorage.removeItem("token");
-      setTimeout(() => navigate("/"), 500);
-    } else {
-      alert(responseData.message || "Logout failed. Please try again.");
+      let responseData;
+      try {
+        responseData = await response.json();
+      } catch (err) {
+        // If JSON parsing fails, just fallback to text (likely an HTML error page)
+        const text = await response.text();
+        console.error("Non-JSON response:", text);
+        throw new Error("Logout failed due to server error");
+      }
+
+      if (response.ok) {
+        localStorage.removeItem("token");
+        setTimeout(() => navigate("/"), 500);
+      } else {
+        alert(responseData.message || "Logout failed. Please try again.");
+      }
+    } catch (error) {
+      console.log("Logout Error:", error);
+      alert("Something went wrong. Please check your network and try again.");
     }
-  } catch (error) {
-    console.log("Logout Error:", error);
-    alert("Something went wrong. Please check your network and try again.");
-  }
-};
-//add funds
+  };
+  //add funds
   const handleAddFunds = async (e) => {
     e.preventDefault();
     setLoading1(true);
@@ -257,48 +260,48 @@ function Profile() {
 
       case 'withdraw':
         return (
-        <>
-        <WithdrawalFait/>
-        </>
+          <>
+            <WithdrawalFait />
+          </>
         );
 
       case 'profile':
-  return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <div className="flex items-center space-x-4">
-          
-          <div>
-           <h2 className="text-2xl font-bold"><strong>Username:</strong> {user?.username || "N/A"}</h2>
-          <p className="text-gray-500"><strong>Email:</strong> {user?.email || "N/A"}</p>
-          <p className="text-gray-500"><strong>Phone Number:</strong> {user?.phone_number || "N/A"}</p>
+        return (
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <div className="flex items-center space-x-4">
 
-          </div>
-        </div>
+                <div>
+                  <h2 className="text-2xl font-bold"><strong>Username:</strong> {user?.username || "N/A"}</h2>
+                  <p className="text-gray-500"><strong>Email:</strong> {user?.email || "N/A"}</p>
+                  <p className="text-gray-500"><strong>Phone Number:</strong> {user?.phone_number || "N/A"}</p>
 
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-medium">Account Status</h3>
-            <p className="text-green-600">Verified</p>
-          </div>
-          <div className="p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-medium">Member Since</h3>
-            <p>January 2024</p>
-          </div>
-          <div className="p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-medium">Wallet Address</h3>
-            <p className="break-all">{user?.accounts?.[0]?.wallet_address || "N/A"}</p>
-          </div>
-          <div className="p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-medium">Fiat Balance (USD)</h3>
-            <p className="text-indigo-600 font-bold text-xl">${user?.fiat_balance ? Number(user.fiat_balance).toFixed(2) : "0.00"}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+                </div>
+              </div>
 
-      
+              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <h3 className="font-medium">Account Status</h3>
+                  <p className="text-green-600">Verified</p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <h3 className="font-medium">Member Since</h3>
+                  <p>January 2024</p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <h3 className="font-medium">Wallet Address</h3>
+                  <p className="break-all">{user?.accounts?.[0]?.wallet_address || "N/A"}</p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <h3 className="font-medium">Fiat Balance (USD)</h3>
+                  <p className="text-indigo-600 font-bold text-xl">${user?.fiat_balance ? Number(user.fiat_balance).toFixed(2) : "0.00"}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+
       case 'balance':
         return (
           <div className="space-y-6">
@@ -307,12 +310,12 @@ function Profile() {
               <div className="text-3xl font-bold text-indigo-600">${user?.fiat_balance ? Number(user.fiat_balance).toFixed(2) : "0.00"}</div>
               <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 bg-gray-50 rounded-lg">
-                  <h3 className="font-medium">Available Balance</h3>
+                  <h3 className="font-medium">Fiat Balance</h3>
                   <p className="text-2xl font-bold">${user?.fiat_balance ? Number(user.fiat_balance).toFixed(2) : "0.00"}</p>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-lg">
-                  <h3 className="font-medium">Locked Balance</h3>
-                  <p className="text-2xl font-bold">$28.76</p>
+                  <h3 className="font-medium">ETH Balance</h3>
+                  <p className="text-2xl font-bold">{wallet?.balance ? Number(wallet.balance): "0.00"} ETH</p>
                 </div>
               </div>
             </div>
@@ -324,91 +327,91 @@ function Profile() {
           <div className="space-y-6">
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h2 className="text-xl font-bold mb-4">Recent Transactions</h2>
-              <TransactionHistory/>
-             
+              <TransactionHistory />
+
             </div>
           </div>
-        ); 
-      
+        );
+
       case 'buy':
         return (<> <BuyCryptoForm /> </>)
-      
+
       case 'sell':
         return (<> <SellCryptoForm /> </>);
-      
+
       case 'swap':
         return (<> <Swap /> </>);
-      
+
       case 'transfer':
         return (<><SendCoin /> </>);
-      
+
       case 'logout':
-        return (<> 
-        
-        <div className="flex items-center justify-center ">
-      <div className="bg-white rounded-xl p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Logout</h2>
-          <button 
-            onClick={() => setActiveTab('dashboard')}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            <X size={24} />
-          </button>
-        </div>
+        return (<>
 
-        <div className="space-y-6">
-          
-          <form onSubmit={handleLogout} method="post">
-
-              {/* Form Fields */}
-              <div className="space-y-4">
-                <div>
-                <h5 className="text-2xl font-bold">Do you really want to logout?</h5>
-                </div>
-                
-                <div>
-                  
-                  <input
-                    type="email"
-                    hidden
-                    value={profileData.email}
-                    onChange={(e) => setProfileData({...profileData, email: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  />
-                </div>
-
-                <div>
-                  
-                  <input
-                    type="tel"
-                    hidden
-                    value={profileData.phone}
-                    onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  />
-                </div>
+          <div className="flex items-center justify-center ">
+            <div className="bg-white rounded-xl p-6 w-full max-w-md">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold">Logout</h2>
+                <button
+                  onClick={() => setActiveTab('dashboard')}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X size={24} />
+                </button>
               </div>
 
-              {/* Save Button */}
-              <button 
-                // onClick={() => setIsProfileOpen(false)}
-                type="submit"
-                className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors"
-              >
-                Confirm Logout  
-              </button>
-          </form>
-        </div>
-      </div>
-    </div>
-        
-         </>);
-      
+              <div className="space-y-6">
+
+                <form onSubmit={handleLogout} method="post">
+
+                  {/* Form Fields */}
+                  <div className="space-y-4">
+                    <div>
+                      <h5 className="text-2xl font-bold">Do you really want to logout?</h5>
+                    </div>
+
+                    <div>
+
+                      <input
+                        type="email"
+                        hidden
+                        value={profileData.email}
+                        onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                    </div>
+
+                    <div>
+
+                      <input
+                        type="tel"
+                        hidden
+                        value={profileData.phone}
+                        onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Save Button */}
+                  <button
+                    // onClick={() => setIsProfileOpen(false)}
+                    type="submit"
+                    className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    Confirm Logout
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+        </>);
+
       case 'settings':
         return (<>
-        <ProfileManagement/>
-        
+          <ProfileManagement />
+
         </>);
 
       default:
@@ -427,7 +430,7 @@ function Profile() {
                 </div>
               </div>
 
-              {/* 24h Change Card */} 
+              {/* 24h Change Card */}
               <div className="bg-white p-6 rounded-xl shadow-sm">
                 <h3 className="text-gray-500 text-sm">24h Change</h3>
                 <div className="mt-2 flex items-center">
@@ -481,7 +484,7 @@ function Profile() {
     }
   };
 
- 
+
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -492,39 +495,37 @@ function Profile() {
             <Wallet className="text-indigo-600" size={24} />
             {isSidebarOpen && <span className="font-bold text-xl">CryptoPanel</span>}
           </div>
-          
+
           <nav className="space-y-2">
             {/* Dashboard Dropdown */}
             <div className="space-y-1">
-              <button 
+              <button
                 onClick={() => setIsDashboardOpen(!isDashboardOpen)}
-                className={`w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 ${
-                  dashboardItems.some(item => item.id === activeTab) ? 'bg-indigo-50 text-indigo-600' : ''
-                }`}
+                className={`w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 ${dashboardItems.some(item => item.id === activeTab) ? 'bg-indigo-50 text-indigo-600' : ''
+                  }`}
               >
                 <div className="flex items-center space-x-2">
                   <LineChart size={20} />
                   {isSidebarOpen && <span>Dashboard</span>}
                 </div>
                 {isSidebarOpen && (
-                  <ChevronDown 
-                    size={16} 
-                    className={`transform transition-transform ${isDashboardOpen ? 'rotate-180' : ''}`} 
+                  <ChevronDown
+                    size={16}
+                    className={`transform transition-transform ${isDashboardOpen ? 'rotate-180' : ''}`}
                   />
                 )}
               </button>
-              
+
               {isDashboardOpen && isSidebarOpen && (
                 <div className="pl-8 space-y-1">
                   {dashboardItems.map((item) => (
                     <button
                       key={item.id}
                       onClick={() => setActiveTab(item.id)}
-                      className={`w-full flex items-center space-x-2 p-2 rounded-lg ${
-                        activeTab === item.id 
-                          ? 'bg-indigo-50 text-indigo-600' 
+                      className={`w-full flex items-center space-x-2 p-2 rounded-lg ${activeTab === item.id
+                          ? 'bg-indigo-50 text-indigo-600'
                           : 'hover:bg-gray-50'
-                      }`}
+                        }`}
                     >
                       <item.icon size={18} />
                       <span>{item.label}</span>
@@ -536,14 +537,13 @@ function Profile() {
 
             {/* Other Navigation Items */}
             {navItems.map((item) => (
-              <button 
+              <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center space-x-2 p-3 rounded-lg ${
-                  activeTab === item.id 
-                    ? 'bg-indigo-50 text-indigo-600' 
+                className={`w-full flex items-center space-x-2 p-3 rounded-lg ${activeTab === item.id
+                    ? 'bg-indigo-50 text-indigo-600'
                     : 'hover:bg-gray-50'
-                }`}
+                  }`}
               >
                 <item.icon size={20} />
                 {isSidebarOpen && <span>{item.label}</span>}
@@ -558,7 +558,7 @@ function Profile() {
         {/* Header */}
         <header className="bg-white shadow-sm">
           <div className="flex items-center justify-between p-4">
-            <button 
+            <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className="hidden md:block"
             >
@@ -567,8 +567,8 @@ function Profile() {
             <div className="flex items-center space-x-4">
               <button className="p-2 hover:bg-gray-100 rounded-full">
               </button>
-               <User size={30} className='text-blue-500'/>
-             <h1> {user?.username || "N/A"}</h1>
+              <User size={30} className='text-blue-500' />
+              <h1> {user?.username || "N/A"}</h1>
             </div>
           </div>
         </header>
@@ -579,7 +579,7 @@ function Profile() {
         </main>
       </div>
 
-    
+
     </div>
   );
 }

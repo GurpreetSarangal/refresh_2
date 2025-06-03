@@ -79,6 +79,9 @@ const SendCoin = () => {
 
     <div>
       <p className="text-sm text-gray-700">
+        <span className="font-semibold">Balance (ETH):</span> {balance ?? 'Loading...'}
+      </p>
+      <p className="text-sm text-gray-700">
         <span className="font-semibold">Balance (WEI):</span> {balanceWei ?? 'Loading...'}
       </p>
     </div>
