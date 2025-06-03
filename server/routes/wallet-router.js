@@ -11,6 +11,7 @@ const sellCrypto = require('../controllers/wallet-sell-controller');
 const getRecentTransactions = require('../controllers/wallet-recent-controller');
 const getPortfolio = require('../controllers/wallet-overview-controller');
 const updateUserSettings = require('../controllers/wallet-update-settings-controller');
+const { updatePasswordController } = require('../controllers/auth-update-password-controller');
 
 
 
@@ -31,8 +32,8 @@ router.post('/sell', authMiddleware, sellCrypto);
 // router.post('/swap', authMiddleware, profileProvider);
 router.post('/transfer', authMiddleware, transferCrypto);
 router.post('/update-settings', authMiddleware, updateUserSettings);
-router.post('/update-password', authMiddleware, updateUserSettings);
-
+router.post('/update-password', authMiddleware, updatePasswordController);
+// router.post('/update-password', authMiddleware, updatePasswordController);
 
 module.exports = router; 
  
